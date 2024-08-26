@@ -1,0 +1,3 @@
+rich
+bs4
+requests
