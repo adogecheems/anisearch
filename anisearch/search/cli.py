@@ -74,7 +74,7 @@ def main() -> None:
     subparsers = parser.add_subparsers(dest='command')
 
     search_parser = subparsers.add_parser('search',
-                                          help='搜索动漫磁链，不知道可用的参数请参阅https://github.com/adogecheems/anisearch'
+                                          help='搜索动漫磁链，不知道可用的参数请参阅https://github.com/adogecheems/Anisearch-lib'
                                           )
     search_parser.add_argument('-p', '--plugin', type=str, help='搜索使用的插件', default='dmhy')
     search_parser.add_argument('-k', '--keyword', type=str, help='搜索关键词', required=True)

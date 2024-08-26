@@ -15,7 +15,7 @@ AniSearch 是一个功能齐全的 Python 库，用于搜索动画磁力。它�
 你可以直接使用 pip 安装 anisearch：
 
 ```
-pip install anisearch
+pip install Anisearch-lib
 ```
 
 ## 使用示例

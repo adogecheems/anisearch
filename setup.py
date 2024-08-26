@@ -7,8 +7,8 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='anisearch',
-    version='1.0.0',
+    name='Anisearch-lib',
+    version='1.0.1',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
@@ -23,7 +23,7 @@ setup(
     license='AGPL-3.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
+        'License :: OSI Approved :: GNU Affero General Public License v3',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -34,5 +34,4 @@ setup(
         'Programming Language :: Python :: 3.12',
     ],
     keywords='search download anime dmhy',
-    pyton_requires='>=3.6'
 )
