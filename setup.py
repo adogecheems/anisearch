@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='anisearch',
-    version='0.1',
+    version='1.0.0',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
@@ -19,7 +19,7 @@ setup(
     description='A library for searching anime magnet links',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/adogecheems/Dmhylib/',
+    url='https://github.com/adogecheems/anisearch',
     license='AGPL-3.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -34,4 +34,5 @@ setup(
         'Programming Language :: Python :: 3.12',
     ],
     keywords='search download anime dmhy',
+    pyton_requires='>=3.6'
 )

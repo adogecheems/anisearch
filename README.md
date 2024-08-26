@@ -1,6 +1,6 @@
 # AniSearch
 
-AniSearch 是一个功能齐全的 Python 库，用于搜索和管理动画资源。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息。
+AniSearch 是一个功能齐全的 Python 库，用于搜索动画磁力。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息。
 
 ## 功能特点
 
@@ -14,7 +14,7 @@ AniSearch 是一个功能齐全的 Python 库，用于搜索和管理动画资�
 
 你可以直接使用 pip 安装 anisearch：
 
-```commandline
+```
 pip install anisearch
 ```
 
@@ -28,17 +28,18 @@ from anisearch import AniSearch
 # 创建 AniSearch 实例
 searcher = AniSearch()
 
-# 可选的参数：
+# __init__()方法可选的参数：
 # plugin_name: 搜索源名称，默认为 'dmhy'
-# parser: bs4 解析器，在'dmhy'中默认为'lxml'
+# parser: beautifulsoup 解析器，在'dmhy'中默认为'lxml'
 # verify: 是否验证 SSL 证书，在'dmhy'中默认为False
 # time_fmt: 时间格式，默认为'%Y-%m-%d %H:%M:%S'
+
 # 以上参数的默认值在选择不同的插件的时候可能会有所不同
 
 # 搜索动画
 searcher.search('我推的孩子')
 
-# 可选的参数：
+# search()方法可选的参数：
 # collected: 是否只搜索季度合集，默认为True
 # proxies: 代理url
 #
@@ -48,7 +49,7 @@ searcher.search('我推的孩子')
 #     'https': 'http://10.10.1.10:1080',
 # }
 # searcher.search("我推的孩子", proxies=proxies)
-# system_proxy: 是否使用系统代理
+# system_proxy: 是否使用系统代理(好像总是不能工作)
 
 # 搜索成功的话会出现如下字样:
 # This search is complete: 我推的孩子
@@ -95,13 +96,13 @@ print(searcher.anime.size)
 
 ### 插件系统
 
-AniSearch 使用基于元类的插件系统来支持不同的搜索源插件系统来支持不同的搜索源。目前实现的插件是 `dmhy`，它搜索 dmhy.org 网站
+AniSearch 使用基于元类的插件系统来支持不同的搜索源插件系统来支持不同的搜索源。目前实现的插件是 `dmhy`
 
 ## 创建自定义插件
 要创建自定义插件，您需要继承 BasePlugin 类并实现 search 方法。以下是一个简单的示例：
 
 ```python
-# 将以下代码保存为 plugins/custom.py
+# 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
 from anisearch.plugins import BasePlugin
 from anisearch.anime.Anime import Anime
 
@@ -157,7 +158,7 @@ anisearch search -k "我推的孩子"
 2. 使用特定搜索插件搜索：
 
 ```
-anisearch search -k "我推的孩子" -p nyaa
+anisearch search -k "我推的孩子" -p nyaa # 还没实现...
 ```
 
 ### 使用流程
