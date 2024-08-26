@@ -75,7 +75,7 @@ class AniSearch:
         self.reset()
         kwargs = {'keyword': keyword}
         if collected is not None:
-            kwargs['if_collected'] = collected
+            kwargs['collected'] = collected
         if proxies is not None:
             kwargs['proxies'] = proxies
         if system_proxy is not None:
