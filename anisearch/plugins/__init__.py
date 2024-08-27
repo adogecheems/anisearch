@@ -1,4 +1,5 @@
 import importlib
+import logging
 from abc import ABCMeta, abstractmethod
 
 
@@ -36,5 +37,8 @@ def get_plugin(name: str):
     Returns:
     - Plugin class if found, otherwise None
     """
-    importlib.import_module(f".{name}", package=__name__)
+    try:
+        importlib.import_module(f".{name}", package=__name__)
+    except ImportError:
+        logging.info(f"The plugin {name} cannot be automatically imported, please import it manually")
     return PluginMeta.plugins.get(name.title())

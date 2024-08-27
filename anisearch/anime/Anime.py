@@ -1,5 +1,4 @@
 import re
-from collections import OrderedDict
 from typing import Tuple
 
 from ..search import log
@@ -9,13 +8,17 @@ size_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*(\w+)')
 magnet_hash_pattern = re.compile(r'btih:(\w+)')
 
 # Conversion factors for different storage units
-conversion_factors = OrderedDict([
-    ('B', 1),
-    ('KB', 1024),
-    ('MB', 1048576),
-    ('GB', 1073741824),
-    ('TB', 1099511627776)
-])
+conversion_factors = {
+    'B': 1,
+    'KB': 1024,
+    'MB': 1048576,
+    'GB': 1073741824,
+    'TB': 1099511627776,
+    'KIB': 1024,
+    'MIB': 1048576,
+    'GIB': 1073741824,
+    'TIB': 1099511627776
+}
 
 
 class Anime:
@@ -34,7 +37,7 @@ class Anime:
         self.size = size
         self.magnet = magnet
 
-    def size_format(self, unit) -> None:
+    def size_format(self, unit: str = 'MB') -> None:
         """
         Format the size of the file to the specified unit.
 
@@ -46,7 +49,7 @@ class Anime:
         """
         try:
             value, pre_unit = self.extract_value_and_unit(self.size)
-            if pre_unit != unit:
+            if pre_unit.upper() != unit.upper():
                 value = self.convert_byte(value, pre_unit, unit)
                 self.size = f"{value}{unit}"
         except ValueError as e:
@@ -73,7 +76,8 @@ class Anime:
             from_factor = conversion_factors[from_unit.upper()]
             to_factor = conversion_factors[to_unit.upper()]
         except KeyError as e:
-            raise ValueError(f"Convert: invalid storage unit '{e.args[0]}'") from e
+            invalid_unit = e.args[0] if e.args else 'unknown'
+            raise ValueError(f"Convert: invalid storage unit '{invalid_unit}'") from e
 
         return round(value * (from_factor / to_factor), 2)
 
@@ -114,7 +118,7 @@ class Anime:
             return False
 
         try:
-            return magnet_hash_pattern.search(self.magnet).group(1) == magnet_hash_pattern.search(value.magnet).group(1)
+            return magnet_hash_pattern.search(self.magnet).group(1).lower() == magnet_hash_pattern.search(value.magnet).group(1).lower()
         except AttributeError:
             log.critical("Magnet hash extraction failed.")
             return False
@@ -138,7 +142,12 @@ class Anime:
         Returns:
             str: The string representation.
         """
-        return f"Anime'{self.title}' with hash {magnet_hash_pattern.search(self.magnet).group(1)}"
+        try:
+            hash_value = magnet_hash_pattern.search(self.magnet).group(1)
+        except AttributeError:
+            log.critical("Magnet hash extraction failed.")
+            hash_value = "unknown"
+        return f"Anime'{self.title}' with hash {hash_value}"
 
     def __repr__(self) -> str:
         """

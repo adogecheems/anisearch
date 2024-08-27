@@ -10,8 +10,8 @@ from ._webget import get_html
 from ..anime.Anime import Anime
 from ..search import log
 
-DOMAIN = "https://comicat.org/"
-BASE_URL = "https://comicat.org/search.php?"
+DOMAIN = "https://kisssub.org/"
+BASE_URL = "https://kisssub.org/search.php?"
 
 
 def get_magnet(script: str) -> str:
@@ -24,7 +24,7 @@ def get_magnet(script: str) -> str:
         raise ValueError("Failed to extract magnet link")
 
 
-class Comicat(BasePlugin):
+class Kisssub(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:

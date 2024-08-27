@@ -9,10 +9,10 @@ from ._webget import get_html
 from ..anime.Anime import Anime
 from ..search import log
 
-BASE_URL = "https://dmhy.org/topics/list/page/{}?"
+BASE_URL = "https://nyaa.si/?"
 
 
-class Dmhy(BasePlugin):
+class Nyaa(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
@@ -20,32 +20,39 @@ class Dmhy(BasePlugin):
         self._verify = verify
         self._timefmt = timefmt
 
-    def search(self, keyword: str, collected: bool = True, proxies: Optional[dict] = None,
+    def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
                system_proxy: bool = False) -> List[Anime]:
         animes: List[Anime] = []
         page = 1
-        params = {'keyword': keyword}
+        params = {'q': keyword, 'c': "1_0"}
+
         if collected:
-            params['sort_id'] = "31"
+            log.warning("Nyaa search does not support collection.")
 
         while True:
-            url = BASE_URL.format(page) + urlencode(params)
+            params['p'] = page
+            url = BASE_URL + urlencode(params)
             try:
                 html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                 bs = BeautifulSoup(html, self._parser)
-                topic = bs.find(id="topic_list")
+                tbody = bs.find('tbody')
 
-                if not topic:
+                if not tbody or tbody.string == "\n":
                     break
 
-                for tr in topic.tbody.find_all("tr"):
+                for tr in tbody.find_all("tr"):
                     tds = tr.find_all("td")
-                    release_time = tds[0].span.string
-                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d %H:%M'))
+                    if len(tds) < 5:
+                        continue
+                    release_time = tds[4].string
+                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y-%m-%d %H:%M'))
 
-                    title = tds[2].find_all("a")[-1].get_text(strip=True)
-                    magnet = tds[3].find(class_="download-arrow").get("href")
-                    size = tds[4].string
+                    title = tds[1].a.get("title")
+                    magnet_links = tds[2].find_all("a")
+                    if len(magnet_links) < 2:
+                        continue
+                    magnet = magnet_links[1].get("href")
+                    size = tds[3].string
 
                     log.debug(f"Successfully got: {title}")
 

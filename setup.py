@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='Anisearch-lib',
-    version='1.0.1',
+    version='1.1.0',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
@@ -33,5 +33,5 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    keywords='search download anime dmhy',
+    keywords='search download anime dmhy comicat kisssub miobt nyaa acg.rip acgrip',
 )

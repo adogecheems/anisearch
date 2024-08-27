@@ -9,9 +9,13 @@ from .AniSearch import AniSearch
 console = Console()
 
 
-def search(search_params: Dict[str, Any]) -> AniSearch:
+def search(search_params: Dict[str, Any], plugin: str = None) -> AniSearch:
     try:
-        searcher = AniSearch()
+        if plugin is not None:
+            searcher = AniSearch(plugin_name=plugin)
+        else:
+            searcher = AniSearch()
+
         searcher.search(**search_params)
         return searcher
     except Exception as e:
@@ -51,14 +55,13 @@ def handle_search(args: argparse.Namespace) -> None:
     if args.collected is not None:
         search_params['collected'] = args.collected
 
-    searcher = search(search_params)
+    searcher = search(search_params, args.plugin) if args.plugin else search(search_params)
+
     if searcher and searcher.animes:
         print_results(searcher)
         selection = get_user_selection(len(searcher.animes))
         if selection > 0:
-            index = selection - 1
-            searcher.select(index)
-
+            searcher.select(selection - 1)
             console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
             console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
         else:
@@ -74,7 +77,7 @@ def main() -> None:
     subparsers = parser.add_subparsers(dest='command')
 
     search_parser = subparsers.add_parser('search',
-                                          help='搜索动漫磁链，不知道可用的参数请参阅https://github.com/adogecheems/Anisearch-lib'
+                                          help='搜索动漫磁链，不知道可用的参数请参阅https://github.com/adogecheems/anisearch'
                                           )
     search_parser.add_argument('-p', '--plugin', type=str, help='搜索使用的插件', default='dmhy')
     search_parser.add_argument('-k', '--keyword', type=str, help='搜索关键词', required=True)

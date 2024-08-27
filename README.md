@@ -1,12 +1,11 @@
-# AniSearch
+# Anisearch
 
-AniSearch 是一个功能齐全的 Python 库，用于搜索动画磁力。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息。
+anisearch 是一个功能齐全的 Python 库，用于搜索动画磁力链接。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息
 
 ## 功能特点
 
-- 支持多个搜索源（通过插件系统）
-- 可自定义的搜索参数
-- 文件大小转换
+- 支持多个搜索源
+- 强大的可扩展性
 - CSV 导出功能
 - 代理支持
 
@@ -20,7 +19,7 @@ pip install Anisearch-lib
 
 ## 使用示例
 
-以下是使用 AniSearch 的基本示例：
+以下是使用 anisearch 的基本示例：
 
 ```python
 from anisearch import AniSearch
@@ -47,7 +46,7 @@ searcher.search('我推的孩子')
 # proxies = {
 #     'http': 'http://10.10.1.10:3128',
 #     'https': 'http://10.10.1.10:1080',
-# }
+# } # 别当真，就是示例而已
 # searcher.search("我推的孩子", proxies=proxies)
 # system_proxy: 是否使用系统代理(好像总是不能工作)
 
@@ -60,7 +59,7 @@ print(searcher.animes)
 # 展示部分输出（在2024年八月的结果）
 # [Anime('2024/03/21 13:25', '【动漫国字幕组】[【我推的孩子】][01-11][BDRip][AVC_AAC][1080P][简体][MP4]', '7.3GB', 'magnet:?xt=urn:btih:P76PROAB5JRUAPHIST63HGRUOMW7SEWU&dn=&tr=...
 
-# 如果一切正常，选择第一个搜索结果
+# 如果一切正常，选择第一个搜索结果（当然也可以选择其他的）
 searcher.select(0)
 
 # 选择后anime属性可用
@@ -96,15 +95,25 @@ print(searcher.anime.size)
 
 ### 插件系统
 
-AniSearch 使用基于元类的插件系统来支持不同的搜索源插件系统来支持不同的搜索源。目前实现的插件是 `dmhy`
+AniSearch 使用基于元类的插件系统来支持不同的搜索源插件系统来支持不同的搜索源
+
+### 已实现的插件
+
+- `dmhy`: 动漫花园搜索源（需要代理，速度适中）
+- `comicat`: 漫猫搜索源（实现很慢，慎用）
+- `kisssub`: 爱恋搜索源（实现很慢，慎用，需要代理）
+- `miobt`：MioBT 搜索源（实现很慢，慎用，需要代理）
+- `nyaa`: nyaa.si 搜索源（需要代理，速度超群，不能使用季度合集搜索）
+- `acgrip`: acg.rip 搜索源（需要代理，速度适中，不能使用季度合集搜索，由于站点的自身原因，获取的magnet是种子的下载链接）
 
 ## 创建自定义插件
-要创建自定义插件，您需要继承 BasePlugin 类并实现 search 方法。以下是一个简单的示例：
+要创建自定义插件，您需要继承 BasePlugin 类并实现 search 方法，anisearch 提供了一个实用的http请求方法 `anisearch.plugins._webget.get_html()`，可以直接使用。以下是一个简单的示例：
 
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
 from anisearch.plugins import BasePlugin
 from anisearch.anime.Anime import Anime
+from anisearch.plugins._webget import get_html
 
 class Custom(BasePlugin):
     abstract = False
@@ -115,6 +124,7 @@ class Custom(BasePlugin):
 
     def search(self, keyword, if_collected=True, proxies=None, system_proxy=False):
         # 这里实现您的搜索逻辑
+        html = get_html("<url>", ...)
         # 返回一个 Anime 对象的列表
         return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
 
@@ -125,7 +135,7 @@ class Custom(BasePlugin):
 ```python
 searcher_custom = AniSearch(plugin_name='custom')
 
-# 提供自动加载插件功能，不需要手动导入
+# 如果文件没有放在项目plugins目录下，需要手动引入
 # 请务必将类名（遵守pep8命名规范）、插件名、文件名保持一致，大小写会自动处理
 
 searcher_custom.search("我推的孩子")
@@ -158,18 +168,15 @@ anisearch search -k "我推的孩子"
 2. 使用特定搜索插件搜索：
 
 ```
-anisearch search -k "我推的孩子" -p nyaa # 还没实现...
+anisearch search -k "我推的孩子" -p comicat
 ```
 
 ### 使用流程
 
-1. 运行搜索命令后，程序会显示搜索结果列表，包括序号、标题和文件大小。
-
-2. 用户可以输入想要选择的项目的序号。
-
-3. 如果选择了有效的序号，程序会显示所选项目的标题和磁力链接。
-
-4. 输入 0 可以退出选择过程。
+1. 运行搜索命令后，程序会显示搜索结果列表，包括序号、标题和文件大小
+2. 用户可以输入想要选择的项目的序号
+3. 如果选择了有效的序号，程序会显示所选项目的标题和磁力链接
+4. 输入 0 可以退出选择过程
 
 
 ## 贡献
