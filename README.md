@@ -107,7 +107,7 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源插件系�
 - `acgrip`: acg.rip 搜索源（需要代理，速度适中，不能使用季度合集搜索，由于站点的自身原因，获取的magnet是种子的下载链接）
 
 ## 创建自定义插件
-要创建自定义插件，您需要继承 BasePlugin 类并实现 search 方法，anisearch 提供了一个实用的http请求方法 `anisearch.plugins._webget.get_html()`，可以直接使用。以下是一个简单的示例：
+要创建自定义插件，您需要继承 BasePlugin 类并实现 search 方法，anisearch 提供了一个实用的http请求函数 `anisearch.plugins._webget.get_html()`，可以直接使用。以下是一个简单的示例：
 
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
