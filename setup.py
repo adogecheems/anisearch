@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='Anisearch-lib',
-    version='1.1.0',
+    version='1.2.0',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
@@ -22,7 +22,7 @@ setup(
     url='https://github.com/adogecheems/anisearch',
     license='AGPL-3.0',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
@@ -33,5 +33,5 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    keywords='search download anime dmhy comicat kisssub miobt nyaa acg.rip acgrip',
+    keywords='search download magnet anime dmhy comicat kisssub miobt nyaa acg.rip acgrip cli commandline',
 )

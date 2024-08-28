@@ -9,20 +9,6 @@ from .AniSearch import AniSearch
 console = Console()
 
 
-def search(search_params: Dict[str, Any], plugin: str = None) -> AniSearch:
-    try:
-        if plugin is not None:
-            searcher = AniSearch(plugin_name=plugin)
-        else:
-            searcher = AniSearch()
-
-        searcher.search(**search_params)
-        return searcher
-    except Exception as e:
-        console.print(f"[bold red]搜索出错: {str(e)}[/bold red]")
-        return None
-
-
 def print_results(searcher: AniSearch) -> None:
     if not searcher.animes:
         console.print("[bold yellow]搜索结果为空[/bold yellow]")
@@ -50,16 +36,28 @@ def get_user_selection(max_index: int) -> int:
             console.print("[bold red]请输入有效的数字[/bold red]")
 
 
-def handle_search(args: argparse.Namespace) -> None:
-    search_params = {'keyword': args.keyword}
-    if args.collected is not None:
-        search_params['collected'] = args.collected
+def main() -> None:
+    parser = argparse.ArgumentParser(description="动漫磁力搜索工具:")
 
-    searcher = search(search_params, args.plugin) if args.plugin else search(search_params)
+    parser.add_argument('-p', '--plugin', type=str, help='搜索使用的插件', default='dmhy')
+    parser.add_argument('-k', '--keyword', type=str, help='搜索关键词', required=True)
+    parser.add_argument('-n', '--not-collected', action='store_true', help='是否不启用默认的季度全集搜索')
+
+    args = parser.parse_args()
+
+    search_params: Dict[str, Any] = {'keyword': args.keyword, 'collected': not args.not_collected}
+
+    searcher = None
+    try:
+        searcher = AniSearch(plugin_name=args.plugin)
+        searcher.search(**search_params)
+    except Exception as e:
+        console.print(f"[bold red]搜索出错: {str(e)}[/bold red]")
 
     if searcher and searcher.animes:
         print_results(searcher)
         selection = get_user_selection(len(searcher.animes))
+
         if selection > 0:
             searcher.select(selection - 1)
             console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
@@ -70,22 +68,3 @@ def handle_search(args: argparse.Namespace) -> None:
         console.print("[bold red]搜索失败，无法进行选择[/bold red]")
     else:
         console.print("[bold yellow]搜索结果为空[/bold yellow]")
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="动漫磁力搜索工具:")
-    subparsers = parser.add_subparsers(dest='command')
-
-    search_parser = subparsers.add_parser('search',
-                                          help='搜索动漫磁链，不知道可用的参数请参阅https://github.com/adogecheems/anisearch'
-                                          )
-    search_parser.add_argument('-p', '--plugin', type=str, help='搜索使用的插件', default='dmhy')
-    search_parser.add_argument('-k', '--keyword', type=str, help='搜索关键词', required=True)
-    search_parser.add_argument('-c', '--collected', type=bool, help='是否只在季度全集里搜索')
-
-    args = parser.parse_args()
-
-    if args.command == 'search':
-        handle_search(args)
-    else:
-        parser.print_help()
