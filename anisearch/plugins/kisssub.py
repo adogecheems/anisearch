@@ -28,17 +28,15 @@ class Kisssub(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
-        self._parser = parser
-        self._verify = verify
-        self._timefmt = timefmt
+        super().__init__(parser, verify, timefmt)
 
     def search(self, keyword: str, collected: bool = True, proxies: Optional[dict] = None,
-               system_proxy: bool = False) -> List[Anime]:
+               system_proxy: bool = False, **extra_options) -> List[Anime]:
         animes: List[Anime] = []
         prev_anime_title = ""
         page = 1
 
-        params = {'keyword': keyword}
+        params = {'keyword': keyword, **extra_options}
         if collected:
             params['complete'] = 1
 
@@ -54,14 +52,14 @@ class Kisssub(BasePlugin):
                 if not tbody:
                     break
 
-                current_titles = [tr.find_all('td')[2].a.get_text(strip=True) for tr in tbody.find_all('tr')]
+                current_titles = [tr.find_all("td")[2].a.get_text(strip=True) for tr in tbody.find_all("tr")]
                 if not current_titles or current_titles[0] == prev_anime_title:
                     break
 
                 prev_anime_title = current_titles[0]
 
-                for tr in tbody.find_all('tr'):
-                    tds = tr.find_all('td')
+                for tr in tbody.find_all("tr"):
+                    tds = tr.find_all("td")
                     release_time = tds[0].get_text(strip=True)
                     try:
                         release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d'))
@@ -70,13 +68,13 @@ class Kisssub(BasePlugin):
                         continue
 
                     title = tds[2].a.get_text(strip=True)
-                    link = DOMAIN + tds[2].a['href']
+                    link = DOMAIN + tds[2].a["href"]
                     size = tds[3].string
 
                     try:
                         link_html = get_html(link, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                         link_bs = BeautifulSoup(link_html, self._parser)
-                        script = link_bs.find(id='btm').find(class_='main').find('script').find_next_siblings('script')[-1].string
+                        script = link_bs.find(id="btm").find(class_="main").find("script").find_next_siblings("script")[-1].string
                         magnet = get_magnet(script)
                     except (ValueError, AttributeError, Exception) as e:
                         log.error(f"Failed to get magnet link for {title}: {e}")

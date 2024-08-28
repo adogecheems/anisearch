@@ -16,15 +16,13 @@ class Nyaa(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
-        self._parser = parser
-        self._verify = verify
-        self._timefmt = timefmt
+        super().__init__(parser, verify, timefmt)
 
     def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
-               system_proxy: bool = False) -> List[Anime]:
+               system_proxy: bool = False, **extra_options) -> List[Anime]:
         animes: List[Anime] = []
         page = 1
-        params = {'q': keyword, 'c': "1_0"}
+        params = {'q': keyword, 'c': "1_0", **extra_options}
 
         if collected:
             log.warning("Nyaa search does not support collection.")
@@ -35,7 +33,7 @@ class Nyaa(BasePlugin):
             try:
                 html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                 bs = BeautifulSoup(html, self._parser)
-                tbody = bs.find('tbody')
+                tbody = bs.find("tbody")
 
                 if not tbody or tbody.string == "\n":
                     break
@@ -44,14 +42,12 @@ class Nyaa(BasePlugin):
                     tds = tr.find_all("td")
                     if len(tds) < 5:
                         continue
+
                     release_time = tds[4].string
                     release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y-%m-%d %H:%M'))
 
                     title = tds[1].a.get("title")
-                    magnet_links = tds[2].find_all("a")
-                    if len(magnet_links) < 2:
-                        continue
-                    magnet = magnet_links[1].get("href")
+                    magnet = tds[2].find_all("a")[1].get("href")
                     size = tds[3].string
 
                     log.debug(f"Successfully got: {title}")

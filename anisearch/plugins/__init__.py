@@ -15,8 +15,13 @@ class PluginMeta(ABCMeta):
 class BasePlugin(metaclass=PluginMeta):
     abstract = True
 
+    def __init__(self, parser, verify, timefmt):
+        self._parser = parser
+        self._verify = verify
+        self._timefmt = timefmt
+
     @abstractmethod
-    def search(self, keyword, proxies, system_proxy):
+    def search(self, keyword, proxies, system_proxy, extra_options):
         """
         Abstract method to search for a keyword.
 
@@ -26,6 +31,7 @@ class BasePlugin(metaclass=PluginMeta):
         - system_proxy: Whether to use system proxy
         """
         pass
+
 
 def get_plugin(name: str):
     """

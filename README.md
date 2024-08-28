@@ -77,10 +77,14 @@ print(searcher.anime.size)
 
 `AniSearch` 是主要的搜索类，提供以下方法：
 
-- `search(keyword, collected=None, proxies=None, system_proxy=None)`: 搜索动画
+- `search(keyword, collected=None, proxies=None, system_proxy=None, **extra_options)`: 搜索动画
 - `select(index)`: 从搜索结果中选择一个动画
 - `size_format(unit='MB')`: 转换选定动画的文件大小
 - `save_csv(filename)`: 将搜索结果保存到 CSV 文件（所有结果）
+
+** extra_options 参数会被并入爬取时的查询字符串中，可以用于指定额外的分类或选项，具体的查询字符串请自行查看搜索源搜索时的 url
+
+![查询字符串](https://cdn.mmoe.work/img/url.png)
 
 ### Anime 类
 
@@ -118,11 +122,10 @@ from anisearch.plugins._webget import get_html
 class Custom(BasePlugin):
     abstract = False
     
-    def __init__(self, *args, **kwargs):
-        # 可以有必要的初始化代码
-        pass
+    def __init__(self, parser, verify, timefmt) -> None:
+        super().__init__(parser, verify, timefmt)
 
-    def search(self, keyword, if_collected=True, proxies=None, system_proxy=False):
+    def search(self, keyword, if_collected=True, proxies=None, system_proxy=False, **extra_options):
         html = get_html("<url>", proxies=None, system_proxy=False, verify=True)
         
         # 这里实现您的搜索逻辑
