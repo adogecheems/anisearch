@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='Anisearch-lib',
-    version='1.2.1',
+    version='1.3.0',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
@@ -19,8 +19,8 @@ setup(
     description='A library for searching anime magnet links',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/adogecheems/anisearch',
-    license='AGPL-3.0',
+    url='https://anisearch.mmoe.work',
+    license='AGPLv3',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: GNU Affero General Public License v3',
@@ -33,5 +33,5 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    keywords='search download magnet anime dmhy comicat kisssub miobt nyaa acg.rip acgrip cli commandline',
+    keywords='search download magnet link magnet-link torrent anime dmhy comicat kisssub miobt nyaa acg.rip acgrip tokyotosho cli commandline',
 )
