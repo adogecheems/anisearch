@@ -41,4 +41,5 @@ def get_plugin(name: str):
         importlib.import_module(f".{name}", package=__name__)
     except ImportError:
         logging.info(f"The plugin {name} cannot be automatically imported, please import it manually")
+
     return PluginMeta.plugins.get(name.title())

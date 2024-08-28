@@ -129,7 +129,6 @@ class Custom(BasePlugin):
         
         # 返回一个 Anime 对象的列表
         return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
-
 ```
 
 ### 使用自定义插件示例
@@ -150,14 +149,14 @@ anisearch 附赠了一个命令行界面，可以直接在终端中使用。
 ### 基本用法
 
 ```
-anisearch search -k <关键词> [选项]
+anisearch -k <关键词> [选项]
 ```
 
 ### 参数说明
 
 - `-k`, `--keyword`: (必需) 搜索关键词
 - `-p`, `--plugin`: (可选) 搜索插件，默认为 `dmhy`
-- `-n`, `--not-collected`: (可选) 是否不启用默认的季度全集搜索
+- `-n`, `--not-collected`: (可选) 不启用默认的季度全集搜索
 
 ### 示例
 
