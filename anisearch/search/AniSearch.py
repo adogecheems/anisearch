@@ -61,7 +61,7 @@ class AniSearch:
         self.if_selected: Optional[bool] = False
 
     def search(self, keyword: str, collected: Optional[bool] = None, proxies: Optional[dict] = None,
-               system_proxy: Optional[bool] = None) -> None:
+               system_proxy: Optional[bool] = None, **extra_options) -> None:
         """
         Search for anime using the given keyword.
 
@@ -79,6 +79,8 @@ class AniSearch:
             kwargs['proxies'] = proxies
         if system_proxy is not None:
             kwargs['system_proxy'] = system_proxy
+        if extra_options is not None:
+            kwargs = {**kwargs, **extra_options}
 
         try:
             self.animes = self.plugin.search(**kwargs)

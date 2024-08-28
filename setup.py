@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='Anisearch-lib',
-    version='1.3.0',
+    version='1.3.1',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={

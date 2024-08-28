@@ -70,5 +70,4 @@ class Tokyotosho(BasePlugin):
                 log.error(f"Error occurred while processing page {page}: {e}")
                 break
 
-        log.info(f"This search is complete: {keyword}")
         return animes
