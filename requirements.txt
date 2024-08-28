@@ -1,3 +1,4 @@
 rich
 bs4
+lxml
 requests
