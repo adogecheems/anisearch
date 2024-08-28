@@ -42,8 +42,6 @@ class Acgrip(BasePlugin):
 
                 while tr:
                     tds = tr.find_all("td")
-                    if len(tds) < 4:
-                        break
 
                     release_time = tds[0].find_all("div")[1].time.get("datetime")
                     release_time = time.strftime(self._timefmt, time.localtime(int(release_time)))
@@ -64,5 +62,4 @@ class Acgrip(BasePlugin):
                 log.error(f"Error occurred while processing page {page}: {e}")
                 break
 
-        log.info(f"This search is complete: {keyword}")
         return animes

@@ -1,3 +1,4 @@
+# Stable
 import time
 from typing import Optional, List
 from urllib.parse import urlencode
@@ -40,8 +41,6 @@ class Nyaa(BasePlugin):
 
                 for tr in tbody.find_all("tr"):
                     tds = tr.find_all("td")
-                    if len(tds) < 5:
-                        continue
 
                     release_time = tds[4].string
                     release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y-%m-%d %H:%M'))
@@ -60,5 +59,4 @@ class Nyaa(BasePlugin):
                 log.error(f"Error occurred while processing page {page}: {e}")
                 break
 
-        log.info(f"This search is complete: {keyword}")
         return animes

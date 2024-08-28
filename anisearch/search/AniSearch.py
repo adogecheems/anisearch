@@ -82,6 +82,9 @@ class AniSearch:
 
         try:
             self.animes = self.plugin.search(**kwargs)
+
+            log.info(f"This search is complete: {keyword}")
+
         except Exception as e:
             log.error(f"Search failed: {str(e)}")
             raise

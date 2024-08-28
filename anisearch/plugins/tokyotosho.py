@@ -12,7 +12,6 @@ from ..search import log
 
 BASE_URL = "https://www.tokyotosho.info/search.php?"
 
-
 def extract_info(text):
     size_match = re.search(r"Size:\s([\d.]+(?:MB|GB|KB))", text)
     size = size_match.group(1) if size_match else None
@@ -35,7 +34,7 @@ class Tokyotosho(BasePlugin):
         params = {'terms': keyword, 'type': 1, **extra_options}
 
         if collected:
-            log.warning("Nyaa search does not support collection.")
+            log.warning("Tokyotosho search does not support collection.")
 
         while True:
             params['page'] = page
@@ -45,17 +44,21 @@ class Tokyotosho(BasePlugin):
                 bs = BeautifulSoup(html, self._parser)
                 table = bs.find(class_='listing')
 
-                if table.find(class_='category_0') is None:
+                if not table or not table.find(class_='category_0'):
                     break
 
                 for row in list(zip(*[iter(table.find_all(class_='category_0'))]*2)):
                     top = row[0].find(class_='desc-top')
+                    if not top:
+                        continue
                     title = top.get_text(strip=True)
-                    magnet = top.a['href']
+                    magnet = top.a['href'] if top.a else None
 
                     bottom = row[1].find(class_='desc-bot')
+                    if not bottom:
+                        continue
                     size, release_time = extract_info(bottom.text)
-                    release_time = time.strftime(self._timefmt, release_time)
+                    release_time = time.strftime(self._timefmt, release_time) if release_time else None
 
                     log.debug(f"Successfully got: {title}")
 

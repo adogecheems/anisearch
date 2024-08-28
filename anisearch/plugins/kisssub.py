@@ -1,3 +1,4 @@
+# Stable
 import re
 import time
 from typing import Optional, List
@@ -47,7 +48,7 @@ class Kisssub(BasePlugin):
             try:
                 html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                 bs = BeautifulSoup(html, self._parser)
-                tbody = bs.find("tbody", id="data_list")
+                tbody = bs.find("tbody", class_="tbody", id="data_list")
 
                 if not tbody:
                     break
@@ -61,11 +62,7 @@ class Kisssub(BasePlugin):
                 for tr in tbody.find_all("tr"):
                     tds = tr.find_all("td")
                     release_time = tds[0].get_text(strip=True)
-                    try:
-                        release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d'))
-                    except ValueError:
-                        log.error(f"Invalid time format: {release_time}")
-                        continue
+                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d'))
 
                     title = tds[2].a.get_text(strip=True)
                     link = DOMAIN + tds[2].a["href"]
@@ -89,5 +86,4 @@ class Kisssub(BasePlugin):
                 log.error(f"Error occurred while processing page {page}: {e}")
                 break
 
-        log.info(f"This search is complete: {keyword}")
         return animes

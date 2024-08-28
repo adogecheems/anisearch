@@ -1,3 +1,4 @@
+# Stable
 import time
 from typing import Optional, List
 from urllib.parse import urlencode
@@ -18,7 +19,7 @@ class Dmhy(BasePlugin):
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
         super().__init__(parser, verify, timefmt)
 
-    def search(self, keyword: str, collected: bool = True, proxies: Optional[dict] = None,
+    def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
                system_proxy: bool = False, **extra_options) -> List[Anime]:
         animes: List[Anime] = []
         page = 1
@@ -56,5 +57,4 @@ class Dmhy(BasePlugin):
                 log.error(f"Error occurred while processing page {page}: {e}")
                 break
 
-        log.info(f"This search is complete: {keyword}")
         return animes
