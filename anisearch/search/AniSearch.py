@@ -140,6 +140,7 @@ class AniSearch:
                         "size": anime.size,
                         "magnet": anime.magnet
                     })
+
         except Exception as e:
             log.error(f"Failed to save CSV: {str(e)}")
             raise

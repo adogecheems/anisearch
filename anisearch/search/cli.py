@@ -44,7 +44,6 @@ def main() -> None:
     parser.add_argument('-c', '--collected', action='store_true', help='是否启用季度全集搜索')
 
     args = parser.parse_args()
-
     search_params: Dict[str, Any] = {'keyword': args.keyword, 'collected': args.collected}
 
     searcher = None
@@ -64,6 +63,7 @@ def main() -> None:
             console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
         else:
             console.print("[bold yellow]已退出选择[/bold yellow]")
+
     elif searcher is None:
         console.print("[bold red]搜索失败，无法进行选择[/bold red]")
     else:
