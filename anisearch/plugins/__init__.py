@@ -21,14 +21,16 @@ class BasePlugin(metaclass=PluginMeta):
         self._timefmt = timefmt
 
     @abstractmethod
-    def search(self, keyword, proxies, system_proxy, extra_options):
+    def search(self, keyword, collected, proxies, system_proxy, extra_options):
         """
         Abstract method to search for a keyword.
 
         Args:
         - keyword: Search keyword
+        - collected: Collected data
         - proxies: Proxy settings
         - system_proxy: Whether to use system proxy
+        - extra_options: Extra options for the search engine
         """
         pass
 
