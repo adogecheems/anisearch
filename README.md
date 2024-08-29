@@ -1,5 +1,7 @@
 # Anisearch
 
+[English](https://github.com/adogecheems/anisearch/blob/master/README_en.md)
+
 anisearch 是一个功能齐全的 Python 库，用于搜索动画磁力链接。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息
 
 ## 功能特点
@@ -128,8 +130,8 @@ class Custom(BasePlugin):
     def __init__(self, parser, verify, timefmt) -> None:
         super().__init__(parser, verify, timefmt)
 
-    def search(self, keyword, if_collected=True, proxies=None, system_proxy=False, **extra_options):
-        html = get_html("<url>", proxies=None, system_proxy=False, verify=True)
+    def search(self, keyword, collected=True, proxies=None, system_proxy=False, **extra_options):
+        html = get_html("<url>", proxies=proxies, system_proxy=system_proxy, verify=self._verify)
         
         # 这里实现您的搜索逻辑
         
@@ -142,7 +144,7 @@ class Custom(BasePlugin):
 ```python
 searcher_custom = AniSearch(plugin_name='custom')
 
-# 如果文件没有放在项目plugins目录下，需要手动引入模块
+# 如果文件没有放在项目plugins目录下，需要手动引入将其引入命名空间
 # 请务必将类名（遵守pep8命名规范）、插件名、文件名保持一致，大小写会自动处理
 
 searcher_custom.search("我推的孩子")
