@@ -7,9 +7,9 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
+from .Anime import Anime
 from ._webget import get_html
-from ..anime.Anime import Anime
-from ..search import log
+from .. import log
 
 DOMAIN = "https://kisssub.org/"
 BASE_URL = "https://kisssub.org/search.php?"

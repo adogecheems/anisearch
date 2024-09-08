@@ -109,11 +109,12 @@ AniSearch uses a metaclass-based plugin system to support different search sourc
 
 - `dmhy`: Anime Garden search source (faster)
 
-- `comicat`: Manmao search source (very slow to implement, use with caution, it is recommended to search only for quarterly collections)
+- `comicat`: [achieve] Comicat search source (very slow to implement, use with caution, it is recommended to search only
+  for quarterly collections)
 
-- `kisssub`: Love search source (same as above)
+- `kisssub`: [achieve] KissSub search source (same as above)
 
-- `miobt`: MioBT search source (same as above)
+- `miobt`: [achieve] MioBT search source (same as above)
 
 - `nyaa`: nyaa.si search source (superb speed, can not use quarterly collection search)
 
@@ -127,20 +128,21 @@ To create a custom plugin, you need to inherit the BasePlugin class and implemen
 ```python
 # Run this code. If there is no exception, it means that the custom plug-in is created successfully and has been registered in the plug-in system
 from anisearch.plugins import BasePlugin
-from anisearch.anime.Anime import Anime
+from anisearch.plugins.Anime import Anime
 from anisearch.plugins._webget import get_html
+
 
 class Custom(BasePlugin):
     abstract = False
 
     def __init__(self, parser, verify, timefmt) -> None:
         super().__init__(parser, verify, timefmt)
-    
+
     def search(self, keyword, collected=True, proxies=None, system_proxy=False, **extra_options):
         html = get_html("<url>", proxies=proxies, system_proxy=system_proxy, verify=self._verify)
-        
+
         # Implement your search logic here
-        
+
         # Return a list of Anime objects
         return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
 ```

@@ -3,8 +3,8 @@ import time
 from typing import List, Optional
 
 from . import log
-from .. import plugins
-from ..anime.Anime import Anime
+from . import plugins
+from .plugins.Anime import Anime
 
 
 class AniSearch:

@@ -108,9 +108,9 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源
 非常悲哀的是，以下搜索源都需要代理
 
 - `dmhy`: 动漫花园搜索源（速度较快）
-- `comicat`: 漫猫搜索源（实现非常慢，慎用，建议只搜索季度合集）
-- `kisssub`: 爱恋搜索源（同上）
-- `miobt`：MioBT 搜索源（同上）
+- `comicat`: [存档] 漫猫搜索源（实现非常慢，慎用，建议只搜索季度合集）
+- `kisssub`: [存档] 爱恋搜索源（同上）
+- `miobt`：[存档] MioBT 搜索源（同上）
 - `nyaa`: nyaa.si 搜索源（速度超群，不能使用季度合集搜索）
 - `acgrip`: acg.rip 搜索源（速度适中，不能使用季度合集搜索，由于站点的自身原因，获取的magnet是种子的下载链接）
 - `tokyotosho` : 东京图书馆搜索源（速度适中，不能使用季度合集搜索，绝大部分资源都需要英/日文才能搜到）
@@ -121,20 +121,21 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
 from anisearch.plugins import BasePlugin
-from anisearch.anime.Anime import Anime
+from anisearch.plugins.Anime import Anime
 from anisearch.plugins._webget import get_html
+
 
 class Custom(BasePlugin):
     abstract = False
-    
+
     def __init__(self, parser, verify, timefmt) -> None:
         super().__init__(parser, verify, timefmt)
 
     def search(self, keyword, collected=True, proxies=None, system_proxy=False, **extra_options):
         html = get_html("<url>", proxies=proxies, system_proxy=system_proxy, verify=self._verify)
-        
+
         # 这里实现您的搜索逻辑
-        
+
         # 返回一个 Anime 对象的列表
         return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
 ```

@@ -6,9 +6,9 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
+from .Anime import Anime
 from ._webget import get_html
-from ..anime.Anime import Anime
-from ..search import log
+from .. import log
 
 DOMAIN = "https://acg.rip"
 BASE_URL = "https://acg.rip/page/{}?"

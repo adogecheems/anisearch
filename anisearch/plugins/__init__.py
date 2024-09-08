@@ -1,6 +1,7 @@
 import importlib
-import logging
 from abc import ABCMeta, abstractmethod
+
+from .. import log
 
 
 class PluginMeta(ABCMeta):
@@ -21,7 +22,7 @@ class BasePlugin(metaclass=PluginMeta):
         self._timefmt = timefmt
 
     @abstractmethod
-    def search(self, keyword, collected, proxies, system_proxy, extra_options):
+    def search(self, keyword, collected, proxies, system_proxy, **extra_options):
         """
         Abstract method to search for a keyword.
 
@@ -48,6 +49,6 @@ def get_plugin(name: str):
     try:
         importlib.import_module(f".{name}", package=__name__)
     except ImportError:
-        logging.info(f"The plugin {name} cannot be automatically imported, please import it manually")
+        log.info(f"The plugin {name} cannot be automatically imported, please import it manually")
 
     return PluginMeta.plugins.get(name.title())

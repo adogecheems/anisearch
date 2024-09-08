@@ -1,6 +1,9 @@
 import os
+
 import requests
-from ..search import log
+
+from .. import log
+
 
 def get_html(url, proxies=None, system_proxy=False, verify=True):
     headers = {

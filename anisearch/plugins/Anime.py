@@ -1,7 +1,7 @@
 import re
 from typing import Tuple
 
-from ..search import log
+from .. import log
 
 # Regular expression patterns
 size_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*(\w+)')

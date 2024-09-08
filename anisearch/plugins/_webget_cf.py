@@ -1,7 +1,9 @@
 import os
-import requests
+
 import cloudscraper
-from ..search import log
+import requests
+
+from .. import log
 
 
 def get_html(url, proxies=None, system_proxy=False, verify=True):

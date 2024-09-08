@@ -1,14 +1,14 @@
-import time
 import re
+import time
 from typing import Optional, List
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
+from .Anime import Anime
 from ._webget import get_html
-from ..anime.Anime import Anime
-from ..search import log
+from .. import log
 
 BASE_URL = "https://www.tokyotosho.info/search.php?"
 
