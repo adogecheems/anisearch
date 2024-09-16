@@ -20,7 +20,6 @@ conversion_factors = {
     'TIB': 1099511627776
 }
 
-
 class Anime:
     def __init__(self, time: str, title: str, size: str, magnet: str):
         """
@@ -43,18 +42,12 @@ class Anime:
 
         Args:
             unit (str, optional): The target unit. Defaults to 'MB'.
-
-        Raises:
-            ValueError: If the size string is invalid or an invalid storage unit is provided.
         """
-        try:
-            value, pre_unit = self.extract_value_and_unit(self.size)
+        value, pre_unit = self.extract_value_and_unit(self.size)
+        if pre_unit is not None and value is not None:
             if pre_unit.upper() != unit.upper():
                 value = self.convert_byte(value, pre_unit, unit)
                 self.size = f"{value}{unit}"
-        except ValueError as e:
-            log.critical(f"Size format error: {e}")
-            raise
 
     @staticmethod
     def convert_byte(value: float, from_unit: str, to_unit: str) -> float:
@@ -68,18 +61,15 @@ class Anime:
 
         Returns:
             float: The converted value.
-
-        Raises:
-            ValueError: If an invalid storage unit is provided.
         """
         try:
             from_factor = conversion_factors[from_unit.upper()]
             to_factor = conversion_factors[to_unit.upper()]
+            return round(value * (from_factor / to_factor), 2)
         except KeyError as e:
             invalid_unit = e.args[0] if e.args else 'unknown'
-            raise ValueError(f"Convert: invalid storage unit '{invalid_unit}'") from e
-
-        return round(value * (from_factor / to_factor), 2)
+            log.error(f"Convert: invalid storage unit '{invalid_unit}'")
+            return None
 
     @staticmethod
     def extract_value_and_unit(size: str) -> Tuple[float, str]:
@@ -91,9 +81,6 @@ class Anime:
 
         Returns:
             Tuple[float, str]: The extracted value and unit.
-
-        Raises:
-            ValueError: If the size string is invalid.
         """
         match = size_pattern.match(size)
 
@@ -102,7 +89,8 @@ class Anime:
             unit = match.group(2)
             return value, unit
         else:
-            raise ValueError(f"Extract: invalid size '{size}'")
+            log.error(f"Extract: invalid size '{size}'")
+            return None, None
 
     def __eq__(self, value: object) -> bool:
         """
@@ -118,9 +106,12 @@ class Anime:
             return False
 
         try:
-            return magnet_hash_pattern.search(self.magnet).group(1).lower() == magnet_hash_pattern.search(value.magnet).group(1).lower()
+            return (
+                    magnet_hash_pattern.search(self.magnet).group(1).lower() ==
+                    magnet_hash_pattern.search(value.magnet).group(1).lower()
+            )
         except AttributeError:
-            log.critical("Magnet hash extraction failed.")
+            log.error("Magnet hash extraction failed.")
             return False
 
     def __ne__(self, other) -> bool:
@@ -145,9 +136,9 @@ class Anime:
         try:
             hash_value = magnet_hash_pattern.search(self.magnet).group(1)
         except AttributeError:
-            log.critical("Magnet hash extraction failed.")
+            log.error("Magnet hash extraction failed.")
             hash_value = "unknown"
-        return f"Anime'{self.title}' with hash {hash_value}"
+        return f"Anime '{self.title}' with hash {hash_value}"
 
     def __repr__(self) -> str:
         """

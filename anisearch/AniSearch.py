@@ -48,11 +48,8 @@ class AniSearch:
         Args:
         - timefmt: Time format string
         """
-        try:
-            time.strftime(timefmt, time.localtime())
-            self._timefmt = timefmt
-        except ValueError:
-            raise ValueError(f"Invalid time format: {timefmt}")
+        time.strftime(timefmt, time.localtime())
+        self._timefmt = timefmt
 
     def reset(self) -> None:
         """Reset the search object."""
@@ -113,11 +110,7 @@ class AniSearch:
         if not self.if_selected:
             raise ValueError("No item selected. Please use select() method first.")
 
-        try:
-            self.anime.size_format(unit)
-        except Exception as e:
-            log.error(f"Size format conversion failed: {str(e)}")
-            raise
+        self.anime.size_format(unit)
 
     def save_csv(self, filename: str) -> None:
         """
@@ -144,6 +137,7 @@ class AniSearch:
         except Exception as e:
             log.error(f"Failed to save CSV: {str(e)}")
             raise
+
 
 if __name__ == "__main__":
     import doctest
