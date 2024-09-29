@@ -58,7 +58,7 @@ class AniSearch:
         self.if_selected: Optional[bool] = False
 
     def search(self, keyword: str, collected: Optional[bool] = None, proxies: Optional[dict] = None,
-               system_proxy: Optional[bool] = None, **extra_options) -> None:
+           system_proxy: Optional[bool] = None, **extra_options) -> bool:
         """
         Search for anime using the given keyword.
 
@@ -67,26 +67,32 @@ class AniSearch:
         - collected: Whether to collect results
         - proxies: Proxy settings
         - system_proxy: Whether to use system proxy
+
+        Returns:
+        - True if search is successful, False otherwise.
         """
         self.reset()
+
+        # 使用过滤条件减少不必要的计算
         kwargs = {'keyword': keyword}
         if collected is not None:
             kwargs['collected'] = collected
-        if proxies is not None:
+        if proxies:
             kwargs['proxies'] = proxies
-        if system_proxy is not None:
+        if system_proxy:
             kwargs['system_proxy'] = system_proxy
-        if extra_options is not None:
-            kwargs = {**kwargs, **extra_options}
+        kwargs.update(extra_options)
 
         try:
             self.animes = self.plugin.search(**kwargs)
 
             log.info(f"This search is complete: {keyword}")
+            return True
 
         except Exception as e:
             log.error(f"Search failed: {str(e)}")
-            raise
+            return False
+
 
     def select(self, index: int) -> None:
         """
