@@ -73,7 +73,6 @@ class AniSearch:
         """
         self.reset()
 
-        # 使用过滤条件减少不必要的计算
         kwargs = {'keyword': keyword}
         if collected is not None:
             kwargs['collected'] = collected
