@@ -1,8 +1,6 @@
 import os
-
 import cloudscraper
 import requests
-
 from .. import log
 
 

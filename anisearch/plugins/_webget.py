@@ -1,7 +1,5 @@
 import os
-
 import requests
-
 from .. import log
 
 
