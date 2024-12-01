@@ -121,7 +121,7 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
 from anisearch.plugins import BasePlugin
-from anisearch.plugins.Anime import Anime
+from anisearch.Anime import Anime
 from anisearch.plugins._webget import get_html
 
 
@@ -158,12 +158,12 @@ anisearch 附赠了一个命令行界面，可以直接在终端中使用。
 ### 基本用法
 
 ```
-anisearch -k <关键词> [选项]
+anisearch -s <关键词> [选项]
 ```
 
 ### 参数说明
 
-- `-k`, `--keyword`: (必需) 搜索关键词
+- `-s`, `--search`: (必需) 搜索关键词
 - `-p`, `--plugin`: (可选) 搜索插件，默认为 `dmhy`
 - `-c`, `--collected`: (可选) 是否只搜索季度合集
 
@@ -172,13 +172,13 @@ anisearch -k <关键词> [选项]
 1. 基本搜索：
 
 ```
-anisearch -k "我推的孩子"
+anisearch -s "我推的孩子"
 ```
 
 2. 使用特定搜索插件搜索：
 
 ```
-anisearch -k "我推的孩子" -p nyaa
+anisearch -s "我推的孩子" -p nyaa
 ```
 
 ### 使用流程

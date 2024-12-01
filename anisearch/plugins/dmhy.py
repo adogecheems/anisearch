@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
-from .Anime import Anime
+from anisearch.Anime import Anime
 from ._webget import get_html
 from .. import log
 

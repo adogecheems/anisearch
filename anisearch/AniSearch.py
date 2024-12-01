@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from . import log
 from . import plugins
-from .plugins.Anime import Anime
+from anisearch.Anime import Anime
 
 
 class AniSearch:

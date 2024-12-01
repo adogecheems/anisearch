@@ -128,7 +128,7 @@ To create a custom plugin, you need to inherit the BasePlugin class and implemen
 ```python
 # Run this code. If there is no exception, it means that the custom plug-in is created successfully and has been registered in the plug-in system
 from anisearch.plugins import BasePlugin
-from anisearch.plugins.Anime import Anime
+from anisearch.Anime import Anime
 from anisearch.plugins._webget import get_html
 
 
@@ -167,12 +167,12 @@ anisearch comes with a command line interface that can be used directly in the t
 ### Basic usage
 
 ```
-anisearch -k <keyword> [options]
+anisearch -s <keyword> [options]
 ```
 
 ### Parameter description
 
-- `-k`, `--keyword`: (required) Search keyword
+- `-s`, `--search`: (required) Search keyword
 
 - `-p`, `--plugin`: (optional) Search plugin, default is `dmhy`
 
@@ -183,13 +183,13 @@ anisearch -k <keyword> [options]
 1. Basic search:
 
 ```
-anisearch -k "我推的孩子"
+anisearch -s "我推的孩子"
 ```
 
 2. Search using a specific search plugin:
 
 ```
-anisearch -k "我推的孩子" -p nyaa
+anisearch -s "我推的孩子" -p nyaa
 ```
 
 ### Usage process

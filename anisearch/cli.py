@@ -40,7 +40,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="动漫磁力搜索工具:")
 
     parser.add_argument('-p', '--plugin', type=str, help='搜索使用的插件', default='dmhy')
-    parser.add_argument('-k', '--keyword', type=str, help='搜索关键词', required=True)
+    parser.add_argument('-s', '--search', type=str, help='搜索关键词', required=True)
     parser.add_argument('-c', '--collected', action='store_true', help='是否启用季度全集搜索')
 
     args = parser.parse_args()

@@ -1,7 +1,8 @@
 import re
-from typing import Tuple
+from dataclasses import dataclass
+from typing import Tuple, Optional
 
-from .. import log
+from anisearch import log
 
 # Regular expression patterns
 size_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*(\w+)')
@@ -20,21 +21,13 @@ conversion_factors = {
     'TIB': 1099511627776
 }
 
-class Anime:
-    def __init__(self, time: str, title: str, size: str, magnet: str):
-        """
-        Initialize an Anime object.
 
-        Args:
-            time: The time information.
-            title: The title of the anime.
-            size: The size of the file.
-            magnet: The magnet link.
-        """
-        self.time = time
-        self.title = title
-        self.size = size
-        self.magnet = magnet
+@dataclass
+class Anime:
+    time: str
+    title: str
+    size: str
+    magnet: str
 
     def size_format(self, unit: str = 'MB') -> None:
         """
@@ -50,7 +43,7 @@ class Anime:
                 self.size = f"{value}{unit}"
 
     @staticmethod
-    def convert_byte(value: float, from_unit: str, to_unit: str) -> float:
+    def convert_byte(value: float, from_unit: str, to_unit: str) -> Optional[float]:
         """
         Convert a byte value from one unit to another.
 
@@ -72,7 +65,7 @@ class Anime:
             return None
 
     @staticmethod
-    def extract_value_and_unit(size: str) -> Tuple[float, str]:
+    def extract_value_and_unit(size: str) -> Optional[Tuple[float, str]]:
         """
         Extract the numeric value and unit from a size string.
 
@@ -90,7 +83,7 @@ class Anime:
             return value, unit
         else:
             log.error(f"Extract: invalid size '{size}'")
-            return None, None
+            return None
 
     def __eq__(self, value: object) -> bool:
         """
