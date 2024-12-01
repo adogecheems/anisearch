@@ -44,7 +44,7 @@ def main() -> None:
     parser.add_argument('-c', '--collected', action='store_true', help='是否启用季度全集搜索')
 
     args = parser.parse_args()
-    search_params: Dict[str, Any] = {'keyword': args.keyword, 'collected': args.collected}
+    search_params: Dict[str, Any] = {'keyword': args.search, 'collected': args.collected}
 
     searcher = None
     try:
