@@ -37,7 +37,7 @@ class AniSearch:
             plugin = plugins.get_plugin(plugin_name)(**kwargs)
             log.debug(f"Successfully loaded plugin: {plugin_name}")
             return plugin
-        except (ImportError, AttributeError) as e:
+        except Exception as e:
             log.error(f"Failed to load plugin {plugin_name}: {str(e)}")
             raise
 
