@@ -84,6 +84,6 @@ class Miobt(BasePlugin):
 
             except Exception as e:
                 log.error(f"Error occurred while processing page {page}: {e}")
-                break
+                raise
 
         return animes
