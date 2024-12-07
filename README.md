@@ -1,4 +1,4 @@
-# Anisearch
+# Animag
 
 [English](https://github.com/adogecheems/anisearch/blob/master/README_en.md)
 
@@ -24,7 +24,7 @@ pip install Anisearch-lib
 以下是使用 anisearch 的基本示例：
 
 ```python
-from anisearch import AniSearch
+from animag import AniSearch
 
 # 创建 AniSearch 实例
 searcher = AniSearch()
@@ -120,9 +120,9 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源
 
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
-from anisearch.plugins import BasePlugin
-from anisearch.Anime import Anime
-from anisearch.plugins._webget import get_html
+from animag.plugins import BasePlugin
+from animag.Anime import Anime
+from animag.plugins._webget import get_html
 
 
 class Custom(BasePlugin):

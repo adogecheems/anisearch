@@ -2,15 +2,15 @@ import csv
 import time
 from typing import List, Optional
 
+from animag.Anime import Anime
 from . import log
 from . import plugins
-from anisearch.Anime import Anime
 
 
-class AniSearch:
+class Searcher:
     def __init__(self, plugin_name: str = 'dmhy', parser: str = None, verify: bool = None, timefmt: str = None):
         """
-        Initialize AniSearch object.
+        Initialize Searcher object.
 
         Args:
         - plugin_name: Name of the plugin, default is 'dmhy'
@@ -21,7 +21,7 @@ class AniSearch:
         self.reset()
         self._timefmt = None
         self.plugin = self._load_plugin(plugin_name, parser, verify, timefmt)
-        log.debug("New search object created.")
+        log.debug("New searcher object created.")
 
     def _load_plugin(self, plugin_name, parser, verify, timefmt):
         kwargs = {}
@@ -33,13 +33,9 @@ class AniSearch:
             self.set_timefmt(timefmt)
             kwargs['timefmt'] = self._timefmt
 
-        try:
-            plugin = plugins.get_plugin(plugin_name)(**kwargs)
-            log.debug(f"Successfully loaded plugin: {plugin_name}")
-            return plugin
-        except Exception as e:
-            log.error(f"Failed to load plugin {plugin_name}: {str(e)}")
-            raise
+        plugin = plugins.get_plugin(plugin_name)(**kwargs)
+        log.info(f"Successfully loaded plugin: {plugin_name}.")
+        return plugin
 
     def set_timefmt(self, timefmt: str) -> None:
         """
@@ -58,7 +54,7 @@ class AniSearch:
         self.if_selected: Optional[bool] = False
 
     def search(self, keyword: str, collected: Optional[bool] = None, proxies: Optional[dict] = None,
-           system_proxy: Optional[bool] = None, **extra_options) -> bool:
+           system_proxy: Optional[bool] = None, **extra_options) -> List[Anime] | None:
         """
         Search for anime using the given keyword.
 
@@ -84,13 +80,16 @@ class AniSearch:
 
         try:
             self.animes = self.plugin.search(**kwargs)
-
-            log.info(f"This search is complete: {keyword}")
-            return True
+            if self.animes is not None:
+                log.info(f"This search is complete: {keyword}")
+            else:
+                log.error("Searcher have not obtained useful results.")
 
         except Exception as e:
-            log.error(f"Search failed: {str(e)}")
-            return False
+            log.error(f"A unknown error occurred: {e}.")
+            self.animes = None
+
+        return self.animes
 
 
     def select(self, index: int) -> None:
@@ -102,6 +101,7 @@ class AniSearch:
         """
         if not (0 <= index < len(self.animes)):
             raise IndexError("Invalid selection index")
+
         self.anime = self.animes[index]
         self.if_selected = True
 

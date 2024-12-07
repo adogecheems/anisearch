@@ -1,7 +1,9 @@
 import importlib
 from abc import ABCMeta, abstractmethod
+from typing import List, Optional
 
 from .. import log
+from ..Anime import Anime
 
 
 class PluginMeta(ABCMeta):
@@ -22,7 +24,8 @@ class BasePlugin(metaclass=PluginMeta):
         self._timefmt = timefmt
 
     @abstractmethod
-    def search(self, keyword, collected, proxies, system_proxy, **extra_options):
+    def search(self, keyword: str, collected: bool, proxies: Optional[dict],
+               system_proxy: bool, **extra_options) -> List[Anime]:
         """
         Abstract method to search for a keyword.
 
@@ -48,7 +51,11 @@ def get_plugin(name: str):
     """
     try:
         importlib.import_module(f".{name}", package=__name__)
-    except ImportError:
-        log.info(f"The plugin {name} cannot be automatically imported, please import it manually")
+    except ImportError as e:
+        log.exception(f"The plugin {name} cannot be imported, maybe you must import it manually.")
+        raise e
+    except Exception as e:
+        log.critical(f"Failed to load plugin {name} with unknown reasons: {e}.")
+        raise e
 
     return PluginMeta.plugins.get(name.title())

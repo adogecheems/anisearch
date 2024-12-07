@@ -5,8 +5,8 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
+from animag.Anime import Anime
 from . import BasePlugin
-from anisearch.Anime import Anime
 from ._webget import get_html
 from .. import log
 
@@ -20,7 +20,7 @@ class Nyaa(BasePlugin):
         super().__init__(parser, verify, timefmt)
 
     def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
-               system_proxy: bool = False, **extra_options) -> List[Anime]:
+               system_proxy: bool = False, **extra_options) -> List[Anime] | None:
         animes: List[Anime] = []
         page = 1
         params = {'q': keyword, 'c': "1_0", **extra_options}
@@ -31,8 +31,13 @@ class Nyaa(BasePlugin):
         while True:
             params['p'] = page
             url = BASE_URL + urlencode(params)
+
             try:
                 html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
+            except:
+                return None
+
+            try:
                 bs = BeautifulSoup(html, self._parser)
                 tbody = bs.find("tbody")
 
@@ -55,8 +60,9 @@ class Nyaa(BasePlugin):
 
                 page += 1
 
+
             except Exception as e:
-                log.error(f"Error occurred while processing page {page}: {e}")
-                raise
+                log.exception(f"A exception occurred while processing page {page}: {e}")
+                break
 
         return animes

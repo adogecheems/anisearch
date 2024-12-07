@@ -12,7 +12,7 @@ setup(
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     entry_points={
-        'console_scripts': ['anisearch=anisearch.cli:main'],
+        'console_scripts': ['animag=animag.cli:main'],
     },
     author='adogecheems',
     author_email='adogecheems@outlook.com',

@@ -1,8 +1,8 @@
 import re
 from dataclasses import dataclass
-from typing import Tuple, Optional
+from typing import Tuple
 
-from anisearch import log
+from animag import log
 
 # Regular expression patterns
 size_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*(\w+)')
@@ -41,9 +41,11 @@ class Anime:
             if pre_unit.upper() != unit.upper():
                 value = self.convert_byte(value, pre_unit, unit)
                 self.size = f"{value}{unit}"
+        else:
+            log.error("Failed to format size.")
 
     @staticmethod
-    def convert_byte(value: float, from_unit: str, to_unit: str) -> Optional[float]:
+    def convert_byte(value: float, from_unit: str, to_unit: str) -> float | None:
         """
         Convert a byte value from one unit to another.
 
@@ -61,11 +63,11 @@ class Anime:
             return round(value * (from_factor / to_factor), 2)
         except KeyError as e:
             invalid_unit = e.args[0] if e.args else 'unknown'
-            log.error(f"Convert: invalid storage unit '{invalid_unit}'")
+            log.error(f"Convert: invalid storage unit '{invalid_unit}'.")
             return None
 
     @staticmethod
-    def extract_value_and_unit(size: str) -> Optional[Tuple[float, str]]:
+    def extract_value_and_unit(size: str) -> Tuple[float, str] | None:
         """
         Extract the numeric value and unit from a size string.
 
@@ -82,7 +84,7 @@ class Anime:
             unit = match.group(2)
             return value, unit
         else:
-            log.error(f"Extract: invalid size '{size}'")
+            log.error(f"Extract: invalid size '{size}'.")
             return None
 
     def __eq__(self, value: object) -> bool:

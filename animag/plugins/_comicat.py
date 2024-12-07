@@ -6,13 +6,13 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
+from animag.Anime import Anime
 from . import BasePlugin
-from anisearch.Anime import Anime
 from ._webget import get_html
 from .. import log
 
-DOMAIN = "https://miobt.com/"
-BASE_URL = "https://miobt.com/search.php?"
+DOMAIN = "https://comicat.org/"
+BASE_URL = "https://comicat.org/search.php?"
 
 
 def get_magnet(script: str) -> str:
@@ -25,7 +25,7 @@ def get_magnet(script: str) -> str:
         raise ValueError("Failed to extract magnet link")
 
 
-class Miobt(BasePlugin):
+class _Comicat(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
@@ -71,9 +71,9 @@ class Miobt(BasePlugin):
                     try:
                         link_html = get_html(link, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                         link_bs = BeautifulSoup(link_html, self._parser)
-                        script = link_bs.find(id="btm").find(class_="main", id="").script.find_next_siblings("script")[-1].string
+                        script = link_bs.find(id="btm").find(class_="main").find("script").find_next_siblings("script")[-1].string
                         magnet = get_magnet(script)
-                    except (ValueError, AttributeError, IndexError) as e:
+                    except (ValueError, AttributeError, Exception) as e:
                         log.error(f"Failed to get magnet link for {title}: {e}")
                         continue
 

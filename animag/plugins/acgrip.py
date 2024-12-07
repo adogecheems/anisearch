@@ -5,8 +5,8 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
+from animag.Anime import Anime
 from . import BasePlugin
-from anisearch.Anime import Anime
 from ._webget import get_html
 from .. import log
 
@@ -18,22 +18,27 @@ class Acgrip(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
-        log.warning("Using acg.rip search can only return torrent download addresses, not magnet links")
+        log.warning("Using acg.rip searcher can only return torrent download addresses, not magnet links")
         super().__init__(parser, verify, timefmt)
 
     def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
-               system_proxy: bool = False, **extra_options) -> List[Anime]:
+               system_proxy: bool = False, **extra_options) -> List[Anime] | None:
         animes: List[Anime] = []
         page = 1
 
         params = {'term': keyword, **extra_options}
         if collected:
-            log.warning("Acg.rip search does not support collection.")
+            log.warning("Acg.rip searcher does not support collection.")
 
         while True:
             url = BASE_URL.format(page) + urlencode(params)
+
             try:
                 html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
+            except:
+                return None
+
+            try:
                 bs = BeautifulSoup(html, self._parser)
                 tr = bs.thead.find_next_sibling("tr")
 
@@ -59,7 +64,7 @@ class Acgrip(BasePlugin):
                 page += 1
 
             except Exception as e:
-                log.error(f"Error occurred while processing page {page}: {e}")
+                log.exception(f"A exception occurred while processing page {page}: {e}")
                 break
 
         return animes

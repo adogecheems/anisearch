@@ -4,12 +4,11 @@ from typing import Dict, Any
 from rich.console import Console
 from rich.table import Table
 
-from .AniSearch import AniSearch
+from .Searcher import Searcher
 
 console = Console()
 
-
-def print_results(searcher: AniSearch) -> None:
+def print_results(searcher: Searcher) -> None:
     if not searcher.animes:
         console.print("[bold yellow]搜索结果为空[/bold yellow]")
         return
@@ -32,7 +31,7 @@ def get_user_selection(max_index: int) -> int:
             if 0 <= index <= max_index:
                 return index
             console.print(f"[bold red]请输入 0 到 {max_index} 之间的数字[/bold red]")
-        except ValueError:
+        except (ValueError, IndexError):
             console.print("[bold red]请输入有效的数字[/bold red]")
 
 
@@ -46,25 +45,21 @@ def main() -> None:
     args = parser.parse_args()
     search_params: Dict[str, Any] = {'keyword': args.search, 'collected': args.collected}
 
-    searcher = None
     try:
-        searcher = AniSearch(plugin_name=args.plugin)
+        searcher = Searcher(plugin_name=args.plugin)
         searcher.search(**search_params)
-    except Exception as e:
-        console.print(f"[bold red]搜索出错: {str(e)}[/bold red]")
 
-    if searcher and searcher.animes:
-        print_results(searcher)
-        selection = get_user_selection(len(searcher.animes))
+        if searcher.animes:
+            print_results(searcher)
+            selection = get_user_selection(len(searcher.animes))
 
-        if selection > 0:
-            searcher.select(selection - 1)
-            console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
-            console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
+            if selection > 0:
+                searcher.select(selection - 1)
+                console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
+                console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
+            else:
+                console.print("[bold yellow]已退出选择[/bold yellow]")
         else:
-            console.print("[bold yellow]已退出选择[/bold yellow]")
-
-    elif searcher is None:
-        console.print("[bold red]搜索失败，无法进行选择[/bold red]")
-    else:
-        console.print("[bold yellow]搜索结果为空[/bold yellow]")
+            console.print("[bold yellow]搜索结果为空[/bold yellow]")
+    except Exception as e:
+        f"[bold red]搜索出错: {e}[/bold red]"

@@ -22,7 +22,7 @@ pip install Anisearch-lib
 Here is a basic example of using anisearch:
 
 ```python
-from anisearch import AniSearch
+from animag import AniSearch
 
 # Create an AniSearch instance
 searcher = AniSearch()
@@ -127,9 +127,9 @@ To create a custom plugin, you need to inherit the BasePlugin class and implemen
 
 ```python
 # Run this code. If there is no exception, it means that the custom plug-in is created successfully and has been registered in the plug-in system
-from anisearch.plugins import BasePlugin
-from anisearch.Anime import Anime
-from anisearch.plugins._webget import get_html
+from animag.plugins import BasePlugin
+from animag.Anime import Anime
+from animag.plugins._webget import get_html
 
 
 class Custom(BasePlugin):
