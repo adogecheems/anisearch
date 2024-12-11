@@ -121,8 +121,8 @@ AniSearch 使用基于元类的插件系统来支持不同的搜索源
 ```python
 # 运行此代码，没有异常说明自定义插件创建成功，已经注册在插件系统中
 from animag.plugins import BasePlugin
-from animag.Anime import Anime
-from animag.plugins._webget import get_html
+from animag.component.Anime import Anime
+from animag.component.webget import get_html
 
 
 class Custom(BasePlugin):

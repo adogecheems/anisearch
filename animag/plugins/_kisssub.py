@@ -6,9 +6,9 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
-from animag.Anime import Anime
+from animag.component.Anime import Anime
+from animag.component.webget import get_html
 from . import BasePlugin
-from ._webget import get_html
 from .. import log
 
 DOMAIN = "https://kisssub.org/"
@@ -71,7 +71,8 @@ class _Kisssub(BasePlugin):
                     try:
                         link_html = get_html(link, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
                         link_bs = BeautifulSoup(link_html, self._parser)
-                        script = link_bs.find(id="btm").find(class_="main").find("script").find_next_siblings("script")[-1].string
+                        script = link_bs.find(id="btm").find(class_="main").find("script").find_next_siblings("script")[
+                            -1].string
                         magnet = get_magnet(script)
                     except (ValueError, AttributeError, Exception) as e:
                         log.error(f"Failed to get magnet link for {title}: {e}")

@@ -1,4 +1,3 @@
-import importlib
 import logging
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
@@ -27,4 +26,7 @@ def setup_logger(name: str = "global", level: int = logging.DEBUG) -> logging.Lo
 
 log = setup_logger()
 
-AniSearch = importlib.import_module('.AniSearch', package=__name__).AniSearch
+from .component.errors import SearchParserError, SearchRequestError
+from .component.webget import get_html
+from .component.Anime import Anime
+from .Searcher import Searcher

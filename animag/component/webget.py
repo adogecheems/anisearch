@@ -3,7 +3,9 @@ import os
 import requests
 from requests import RequestException
 
-from .. import log
+from .. import log, SearchRequestError
+
+RETRYING_NUM = 3
 
 
 def get_html(url, proxies=None, system_proxy=False, verify=True):
@@ -20,18 +22,25 @@ def get_html(url, proxies=None, system_proxy=False, verify=True):
             log.warning("No system proxy found.")
 
     counter = 0
-    while counter < 3:
+    while True:
         try:
             if not verify:
                 requests.packages.urllib3.disable_warnings()
 
+            log.debug(f"A request has been made to the url: {url}.")
             response = requests.get(url, headers=headers, proxies=proxies, verify=verify)
-            log.debug(f"A request has been made to url: {url}.")
-            return response.content
+            break
 
-        except RequestException:
+        except RequestException as e:
             counter += 1
+            log.exception(f"A request exception occurred, retrying: {counter}.")
 
-            log.exception(f"A network problem occurred, retrying: {counter}.")
+            if counter >= RETRYING_NUM:
+                log.error(f"Failed to get the response by the url: {url}.")
+                raise SearchRequestError() from e
 
-    log.error("This search was aborted due to network reasons.")
+    if response.status_code == 200 and response.headers['Content-Type'] == "text/html":
+        return response.content
+    else:
+        log.error(f"Got a unknown response by the url: {url}.")
+        raise SearchRequestError()

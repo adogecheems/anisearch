@@ -8,6 +8,7 @@ from .Searcher import Searcher
 
 console = Console()
 
+
 def print_results(searcher: Searcher) -> None:
     if not searcher.animes:
         console.print("[bold yellow]搜索结果为空[/bold yellow]")

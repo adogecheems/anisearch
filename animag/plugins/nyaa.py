@@ -1,13 +1,13 @@
-# Stable
 import time
 from typing import Optional, List
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
-from animag.Anime import Anime
 from . import BasePlugin
-from ._webget import get_html
+from .. import Anime
+from .. import SearchParserError
+from .. import get_html
 from .. import log
 
 BASE_URL = "https://nyaa.si/?"
@@ -29,13 +29,11 @@ class Nyaa(BasePlugin):
             log.warning("Nyaa search does not support collection.")
 
         while True:
+            log.debug(f"Processing the page of {page}")
+
             params['p'] = page
             url = BASE_URL + urlencode(params)
-
-            try:
-                html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
-            except:
-                return None
+            html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
 
             try:
                 bs = BeautifulSoup(html, self._parser)
@@ -60,9 +58,8 @@ class Nyaa(BasePlugin):
 
                 page += 1
 
-
-            except Exception as e:
-                log.exception(f"A exception occurred while processing page {page}: {e}")
-                break
+            except:
+                log.error(f"A error occurred while processing the page of {page}.")
+                raise SearchParserError()
 
         return animes

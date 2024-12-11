@@ -5,12 +5,14 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
-from animag.Anime import Anime
 from . import BasePlugin
-from ._webget import get_html
+from .. import Anime
+from .. import SearchParserError
+from .. import get_html
 from .. import log
 
 BASE_URL = "https://www.tokyotosho.info/search.php?"
+
 
 def extract_info(text):
     size_match = re.search(r"Size:\s([\d.]+(?:MB|GB|KB))", text)
@@ -20,6 +22,7 @@ def extract_info(text):
     date = time.strptime(date_match.group(1), "%Y-%m-%d %H:%M") if date_match else None
 
     return size, date
+
 
 class Tokyotosho(BasePlugin):
     abstract = False
@@ -37,13 +40,11 @@ class Tokyotosho(BasePlugin):
             log.warning("Tokyotosho search does not support collection.")
 
         while True:
+            log.debug(f"Processing the page of {page}")
+
             params['page'] = page
             url = BASE_URL + urlencode(params)
-
-            try:
-                html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
-            except:
-                return None
+            html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
 
             try:
                 bs = BeautifulSoup(html, self._parser)
@@ -52,7 +53,7 @@ class Tokyotosho(BasePlugin):
                 if not table or not table.find(class_='category_0'):
                     break
 
-                for row in list(zip(*[iter(table.find_all(class_='category_0'))]*2)):
+                for row in list(zip(*[iter(table.find_all(class_='category_0'))] * 2)):
                     top = row[0].find(class_='desc-top')
                     if not top:
                         continue
@@ -71,9 +72,8 @@ class Tokyotosho(BasePlugin):
 
                 page += 1
 
-
-            except Exception as e:
-                log.exception(f"A exception occurred while processing page {page}: {e}")
-                break
+            except:
+                log.error(f"A error occurred while processing the page of {page}.")
+                raise SearchParserError()
 
         return animes

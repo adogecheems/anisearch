@@ -28,6 +28,7 @@ class Anime:
     title: str
     size: str
     magnet: str
+    torrent: str = None
 
     def size_format(self, unit: str = 'MB') -> None:
         """
@@ -37,7 +38,7 @@ class Anime:
             unit (str, optional): The target unit. Defaults to 'MB'.
         """
         value, pre_unit = self.extract_value_and_unit(self.size)
-        if pre_unit is not None and value is not None:
+        if pre_unit and value:
             if pre_unit.upper() != unit.upper():
                 value = self.convert_byte(value, pre_unit, unit)
                 self.size = f"{value}{unit}"
@@ -129,7 +130,7 @@ class Anime:
             str: The string representation.
         """
         try:
-            hash_value = magnet_hash_pattern.search(self.magnet).group(1)
+            hash_value = magnet_hash_pattern.search(self.magnet).group(1).lower()
         except AttributeError:
             log.error("Magnet hash extraction failed.")
             hash_value = "unknown"

@@ -2,8 +2,8 @@ import importlib
 from abc import ABCMeta, abstractmethod
 from typing import List, Optional
 
+from animag.component.Anime import Anime
 from .. import log
-from ..Anime import Anime
 
 
 class PluginMeta(ABCMeta):
@@ -13,6 +13,7 @@ class PluginMeta(ABCMeta):
         super().__init__(name, bases, attrs)
         if not getattr(cls, 'abstract'):
             PluginMeta.plugins[name] = cls
+            cls.name = name
 
 
 class BasePlugin(metaclass=PluginMeta):
@@ -51,11 +52,8 @@ def get_plugin(name: str):
     """
     try:
         importlib.import_module(f".{name}", package=__name__)
-    except ImportError as e:
-        log.exception(f"The plugin {name} cannot be imported, maybe you must import it manually.")
-        raise e
-    except Exception as e:
-        log.critical(f"Failed to load plugin {name} with unknown reasons: {e}.")
-        raise e
+    except ImportError:
+        log.error(f"The plugin {name} cannot be imported, maybe you must import it manually.")
+        raise
 
     return PluginMeta.plugins.get(name.title())

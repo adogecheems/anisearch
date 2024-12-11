@@ -128,23 +128,23 @@ To create a custom plugin, you need to inherit the BasePlugin class and implemen
 ```python
 # Run this code. If there is no exception, it means that the custom plug-in is created successfully and has been registered in the plug-in system
 from animag.plugins import BasePlugin
-from animag.Anime import Anime
-from animag.plugins._webget import get_html
+from animag.component.Anime import Anime
+from animag.component.webget import get_html
 
 
 class Custom(BasePlugin):
-    abstract = False
+  abstract = False
 
-    def __init__(self, parser, verify, timefmt) -> None:
-        super().__init__(parser, verify, timefmt)
+  def __init__(self, parser, verify, timefmt) -> None:
+    super().__init__(parser, verify, timefmt)
 
-    def search(self, keyword, collected=True, proxies=None, system_proxy=False, **extra_options):
-        html = get_html("<url>", proxies=proxies, system_proxy=system_proxy, verify=self._verify)
+  def search(self, keyword, collected=True, proxies=None, system_proxy=False, **extra_options):
+    html = get_html("<url>", proxies=proxies, system_proxy=system_proxy, verify=self._verify)
 
-        # Implement your search logic here
+    # Implement your search logic here
 
-        # Return a list of Anime objects
-        return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
+    # Return a list of Anime objects
+    return [Anime("2023/06/01 12:00", "Custom Anime", "1.5GB", "magnet:?xt=urn:btih:..."), ...]
 ```
 
 ### Example of using a custom plugin
