@@ -26,7 +26,7 @@ class Dmhy(BasePlugin):
             params['sort_id'] = "31"
 
         while True:
-            log.debug(f"Processing the page of {page}.")
+            log.debug(f"Processing the page of {page}")
 
             url = BASE_URL.format(page) + urlencode(params)
             html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
@@ -47,15 +47,13 @@ class Dmhy(BasePlugin):
                     magnet = tds[3].find(class_="download-arrow")["href"]
                     size = tds[4].string
 
-                    log.debug(f"Successfully got: {title}.")
+                    log.debug(f"Successfully got: {title}")
 
                     animes.append(Anime(release_time, title, size, magnet))
 
                 page += 1
 
-
             except Exception as e:
-                log.error(f"A error occurred while processing the page of {page} with error {e!r}.")
-                raise SearchParserError()
+                raise SearchParserError(f"A error occurred while processing the page of {page} with error {e!r}")
 
         return animes

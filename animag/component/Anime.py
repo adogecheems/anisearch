@@ -21,7 +21,7 @@ conversion_factors = {
 }
 
 
-@dataclass(frozen=True)
+@dataclass
 class Anime:
     time: str
     title: str
@@ -41,8 +41,7 @@ class Anime:
         """
         result = self.extract_value_and_unit(self.size)
         if not result:
-            log.error(f"Failed to format size of the anime: {self.title}")
-            raise SizeFormatError()
+            raise SizeFormatError(f"Failed to format size of the anime: {self.title}")
 
         value, pre_unit = result
         if pre_unit.upper() == unit.upper():
@@ -50,9 +49,9 @@ class Anime:
 
         converted_value = self.convert_byte(value, pre_unit, unit)
         if converted_value is None:
-            raise SizeFormatError()
+            raise SizeFormatError(f"Failed to format size of the anime: {self.title}")
 
-        object.__setattr__(self, 'size', f"{converted_value}{unit}")
+        self.size = f"{value}{unit}"
 
     @staticmethod
     @lru_cache(maxsize=128)
@@ -121,7 +120,7 @@ class Anime:
         try:
             return self._get_hash(self.magnet) == self._get_hash(other.magnet)
         except AttributeError:
-            log.error("Magnet hash extraction failed")
+            log.error("Magnet hash extraction failed.")
             return False
 
     def __hash__(self) -> int:

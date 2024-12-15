@@ -1,9 +1,13 @@
 import functools
+from typing import Optional
+
+from .. import log
 
 
 class SearchError(Exception):
-    pass
-
+    def __init__(self, msg: Optional[str] = None):
+        super().__init__(msg)
+        log.error(msg)
 
 class SearchRequestError(SearchError):
     pass
@@ -31,6 +35,6 @@ def no_errors(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            print(f"Caught error: {e!r}.")
+            print(f"Caught error: {e!r}")
 
     return wrapper

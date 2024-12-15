@@ -37,7 +37,7 @@ class Tokyotosho(BasePlugin):
             log.warning("Tokyotosho search does not support collection.")
 
         while True:
-            log.debug(f"Processing the page of {page}.")
+            log.debug(f"Processing the page of {page}")
 
             params['page'] = page
             url = BASE_URL + urlencode(params)
@@ -63,15 +63,15 @@ class Tokyotosho(BasePlugin):
                     size, release_time = extract_info(bottom.text)
                     release_time = time.strftime(self._timefmt, release_time) if release_time else None
 
-                    log.debug(f"Successfully got: {title}.")
+                    log.debug(f"Successfully got: {title}")
 
                     animes.append(Anime(release_time, title, size, magnet))
 
                 page += 1
 
 
+
             except Exception as e:
-                log.error(f"A error occurred while processing the page of {page} with error {e!r}.")
-                raise SearchParserError()
+                raise SearchParserError(f"A error occurred while processing the page of {page} with error {e!r}")
 
         return animes

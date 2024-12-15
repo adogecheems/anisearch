@@ -2,7 +2,7 @@
 
 [English](https://github.com/adogecheems/anisearch/blob/master/README_en.md)
 
-anisearch 是一个功能齐全的 Python 库，用于搜索动画磁力链接。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息
+animag 是一个功能齐全的 Python 库，用于搜索动画磁力链接。它还提供了一个灵活的插件系统，允许用户从不同的来源搜索动画信息
 
 ## 功能特点
 

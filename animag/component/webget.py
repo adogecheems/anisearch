@@ -82,13 +82,11 @@ def validate_response(response: Response, url: str) -> bytes:
         SearchRequestError: If response is invalid
     """
     if response.status_code != 200:
-        log.error(f"Invalid status code {response.status_code} for URL: {url}")
-        raise SearchRequestError()
+        raise SearchRequestError(f"Invalid status code {response.status_code} for URL: {url}")
 
     content_type = response.headers.get('Content-Type', '')
     if not content_type.startswith("text/html"):
-        log.error(f"Invalid content type '{content_type}' for URL: {url}")
-        raise SearchRequestError()
+        raise SearchRequestError(f"Invalid content type '{content_type}' for URL: {url}")
 
     return response.content
 
@@ -132,8 +130,7 @@ def get_html(
         return validate_response(response, url)
 
     except RequestException as e:
-        log.error(f"Request failed for URL {url}: {str(e)}")
-        raise SearchRequestError() from e
+        raise SearchRequestError(f"Request failed for URL {url}: {e!r}")
 
     finally:
         session.close()

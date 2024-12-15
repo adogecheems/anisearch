@@ -1,11 +1,10 @@
 import copy
 import csv
 import time
-from typing import List, Optional, Dict, Any
-from contextlib import contextmanager
+from typing import List, Dict, Any
 
-from . import plugins
 from . import *
+from . import plugins
 
 
 class Searcher:
@@ -31,7 +30,6 @@ class Searcher:
         self._timefmt: Optional[str] = None
         self.animes: List[Anime] | None = None
         self.anime: Anime | None = None
-        self.if_selected: bool = False
 
         if no_search_errors:
             log.warning("Search errors will not be raised.")
@@ -70,32 +68,18 @@ class Searcher:
         Raises:
             ValueError: If time format is invalid
         """
-        time.strftime(timefmt, time.localtime())
-        self._timefmt = timefmt
-
-    def reset(self) -> None:
-        """Reset the search object to initial state."""
-        self.animes = None
-        self.anime = None
-        self.if_selected = False
-
-    @contextmanager
-    def _handle_search_error(self, keyword: str):
-        """Context manager for handling search errors."""
         try:
-            yield
+            time.strftime(timefmt, time.localtime())
         except Exception as e:
-            log.error(f"Search failed for '{keyword}': {e!r}")
-            self.reset()
-            raise
-        else:
-            log.info(f"Search completed successfully: {keyword}")
+            raise ValueError(f"Invalid time format {timefmt} : {e!r}")
+
+        self._timefmt = timefmt
 
     def search(self, keyword: str,
                collected: Optional[bool] = None,
                proxies: Optional[dict] = None,
                system_proxy: Optional[bool] = None,
-               **extra_options) -> Optional[List[Anime]]:
+               **extra_options) -> List[Anime] | None:
         """
         Search for anime using the given keyword.
 
@@ -104,7 +88,7 @@ class Searcher:
             collected: Whether to collect results
             proxies: Proxy settings
             system_proxy: Whether to use system proxy
-            **extra_options: Additional search options
+            **extra_options: Additional search options (as param strings)
 
         Returns:
             List of found animes or None if search fails
@@ -113,7 +97,7 @@ class Searcher:
             SearchRequestError: If search request fails
             SearchParseError: If search result parsing fails
         """
-        self.reset()
+        self.animes = None
 
         kwargs = {
             'keyword': keyword,
@@ -123,45 +107,15 @@ class Searcher:
             **extra_options
         }
 
-        with self._handle_search_error(keyword):
+        try:
             self.animes = self.plugin.search(**kwargs)
-            return self.animes
+        except Exception as e:
+            log.error(f"Search failed for '{keyword}': {e!r}")
+            raise
+        else:
+            log.info(f"Search completed successfully: {keyword}")
 
-    def select(self, index: int) -> None:
-        """
-        Select an anime from the search results.
-
-        Args:
-            index: Index of the anime in the results list
-
-        Raises:
-            IndexError: If index is out of range
-            ValueError: If no search results exist
-        """
-        if self.animes is None:
-            raise ValueError("No search results available")
-
-        if not (0 <= index < len(self.animes)):
-            raise IndexError(f"Index {index} is out of range")
-
-        self.anime = self.animes[index]
-        self.if_selected = True
-
-    def size_format(self, unit: str = 'MB') -> None:
-        """
-        Convert the size of the selected anime to the specified unit.
-
-        Args:
-            unit: Target size unit, default is 'MB'
-
-        Raises:
-            ValueError: If no item is selected
-            SizeFormatError: If size format fails
-        """
-        if not self.if_selected or self.anime is None:
-            raise ValueError("No item selected")
-
-        self.anime.size_format(unit)
+        return self.animes
 
     def size_format_all(self, unit: str = 'MB') -> None:
         """
@@ -175,7 +129,7 @@ class Searcher:
             SizeFormatError: If size format fails
         """
         if self.animes is None:
-            raise ValueError("No search results available")
+            raise ValueError("No search results available.")
 
         try:
             formatted_animes = copy.deepcopy(self.animes)
@@ -198,7 +152,7 @@ class Searcher:
             SaveCSVError: If saving fails
         """
         if self.animes is None:
-            raise ValueError("No search results available")
+            raise ValueError("No search results available.")
 
         fieldnames = ["time", "title", "size", "magnet"]
 
@@ -214,9 +168,9 @@ class Searcher:
                         "size": anime.size,
                         "magnet": anime.magnet
                     })
+
         except Exception as e:
-            log.error(f"Failed to save CSV file '{filename}': {e!r}")
-            raise SaveCSVError()
+            raise SaveCSVError(f"Failed to save CSV file '{filename}': {e!r}")
 
 
 if __name__ == "__main__":

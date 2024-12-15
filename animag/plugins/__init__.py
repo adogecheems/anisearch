@@ -19,14 +19,21 @@ class PluginMeta(ABCMeta):
 class BasePlugin(metaclass=PluginMeta):
     abstract = True
 
-    def __init__(self, parser, verify, timefmt):
+    def __init__(self,
+                 parser: Optional[str] = None,
+                 verify: Optional[bool] = None,
+                 timefmt: Optional[str] = None):
+
         self._parser = parser
         self._verify = verify
         self._timefmt = timefmt
 
     @abstractmethod
-    def search(self, keyword: str, collected: bool, proxies: Optional[dict],
-               system_proxy: bool, **extra_options) -> List[Anime]:
+    def search(self, keyword: str,
+               collected: Optional[bool] = None,
+               proxies: Optional[dict] = None,
+               system_proxy: Optional[bool] = None,
+               **extra_options) -> List[Anime] | None:
         """
         Abstract method to search for a keyword.
 
@@ -53,7 +60,6 @@ def get_plugin(name: str):
     try:
         importlib.import_module(f".{name}", package=__name__)
     except:
-        log.error(f"The plugin {name} cannot be imported, maybe you must import it manually.")
-        raise PluginImportError()
+        raise PluginImportError(f"The plugin {name} cannot be imported, maybe you must import it manually.")
 
     return PluginMeta.plugins.get(name.title())
