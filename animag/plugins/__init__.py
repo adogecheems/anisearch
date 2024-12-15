@@ -52,8 +52,8 @@ def get_plugin(name: str):
     """
     try:
         importlib.import_module(f".{name}", package=__name__)
-    except ImportError:
+    except:
         log.error(f"The plugin {name} cannot be imported, maybe you must import it manually.")
-        raise PluginImportError(f"")
+        raise PluginImportError()
 
     return PluginMeta.plugins.get(name.title())
