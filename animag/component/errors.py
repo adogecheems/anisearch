@@ -9,6 +9,7 @@ class SearchError(Exception):
         super().__init__(msg)
         log.error(msg)
 
+
 class SearchRequestError(SearchError):
     pass
 

@@ -1,7 +1,7 @@
 import logging
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
-LOG_FILE = "search.log"
+LOG_FILE = "animag.log"
 
 
 def setup_logger(name: str = "global", level: int = logging.DEBUG) -> logging.Logger:

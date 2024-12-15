@@ -1,8 +1,7 @@
 import importlib
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import List
 
-from animag.component.Anime import Anime
 from .. import *
 
 
@@ -23,7 +22,6 @@ class BasePlugin(metaclass=PluginMeta):
                  parser: Optional[str] = None,
                  verify: Optional[bool] = None,
                  timefmt: Optional[str] = None):
-
         self._parser = parser
         self._verify = verify
         self._timefmt = timefmt

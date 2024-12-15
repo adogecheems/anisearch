@@ -1,12 +1,12 @@
 import os
 from functools import lru_cache
-from typing import Optional, Dict, Union
+from typing import Optional, Dict
 
 import requests
 from requests import RequestException, Response
 from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 from urllib3.exceptions import InsecureRequestWarning
+from urllib3.util.retry import Retry
 
 from .. import log, SearchRequestError
 

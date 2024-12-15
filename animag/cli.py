@@ -47,16 +47,16 @@ def main() -> None:
     search_params: Dict[str, Any] = {'keyword': args.search, 'collected': args.collected}
 
     searcher = Searcher(plugin_name=args.plugin, no_search_errors=True)
-    searcher.search(**search_params)
+    animes = searcher.search(**search_params)
 
-    if searcher.animes:
+    if animes:
         print_results(searcher)
         selection = get_user_selection(len(searcher.animes))
 
         if selection > 0:
-            searcher.select(selection - 1)
+            anime = animes[selection]
             console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
-            console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
+            console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{anime.magnet}[/bold yellow]")
         else:
             console.print("[bold yellow]已退出选择[/bold yellow]")
     else:
