@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='Anisearch-lib',
+    name='animag',
     version='1.4.0',
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
@@ -15,7 +15,7 @@ setup(
         'console_scripts': ['animag=animag.cli:main'],
     },
     author='adogecheems',
-    author_email='adogecheems@outlook.com',
+    author_email='master@mmoe.work',
     description='A library for searching anime magnet links',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -31,5 +31,5 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    keywords='search download magnet link magnet-link torrent anime dmhy comicat kisssub miobt nyaa acg.rip acgrip tokyotosho cli commandline',
+    keywords='',
 )

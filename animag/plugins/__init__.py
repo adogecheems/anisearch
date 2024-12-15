@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Optional
 
 from animag.component.Anime import Anime
-from .. import log
+from .. import *
 
 
 class PluginMeta(ABCMeta):
@@ -54,6 +54,6 @@ def get_plugin(name: str):
         importlib.import_module(f".{name}", package=__name__)
     except ImportError:
         log.error(f"The plugin {name} cannot be imported, maybe you must import it manually.")
-        raise
+        raise PluginImportError(f"")
 
     return PluginMeta.plugins.get(name.title())

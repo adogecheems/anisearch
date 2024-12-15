@@ -5,10 +5,7 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
-from .. import Anime
-from .. import SearchParserError
-from .. import get_html
-from .. import log
+from .. import *
 
 BASE_URL = "https://nyaa.si/?"
 
@@ -29,7 +26,7 @@ class Nyaa(BasePlugin):
             log.warning("Nyaa search does not support collection.")
 
         while True:
-            log.debug(f"Processing the page of {page}")
+            log.debug(f"Processing the page of {page}.")
 
             params['p'] = page
             url = BASE_URL + urlencode(params)
@@ -52,14 +49,15 @@ class Nyaa(BasePlugin):
                     magnet = tds[2].find_all("a")[1].get("href")
                     size = tds[3].string
 
-                    log.debug(f"Successfully got: {title}")
+                    log.debug(f"Successfully got: {title}.")
 
                     animes.append(Anime(release_time, title, size, magnet))
 
                 page += 1
 
-            except:
-                log.error(f"A error occurred while processing the page of {page}.")
+
+            except Exception as e:
+                log.error(f"A error occurred while processing the page of {page} with error {e!r}.")
                 raise SearchParserError()
 
         return animes

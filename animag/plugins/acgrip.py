@@ -6,10 +6,7 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 from . import BasePlugin
-from .. import Anime
-from .. import SearchParserError
-from .. import get_html
-from .. import log
+from .. import *
 
 DOMAIN = "https://acg.rip"
 BASE_URL = "https://acg.rip/page/{}?"
@@ -19,7 +16,7 @@ class Acgrip(BasePlugin):
     abstract = False
 
     def __init__(self, parser: str = 'lxml', verify: bool = False, timefmt: str = r'%Y/%m/%d %H:%M') -> None:
-        log.warning("Using acg.rip searcher can only return torrent download addresses")
+        log.warning("Using acg.rip searcher can only return torrent download addresses.")
         super().__init__(parser, verify, timefmt)
 
     def search(self, keyword: str, collected: bool = False, proxies: Optional[dict] = None,
@@ -32,7 +29,7 @@ class Acgrip(BasePlugin):
             log.warning("Acg.rip searcher does not support collection.")
 
         while True:
-            log.debug(f"Processing the page of {page}")
+            log.debug(f"Processing the page of {page}.")
 
             url = BASE_URL.format(page) + urlencode(params)
             html = get_html(url, verify=self._verify, proxies=proxies, system_proxy=system_proxy)
@@ -54,7 +51,7 @@ class Acgrip(BasePlugin):
                     magnet = DOMAIN + tds[2].a["href"]
                     size = tds[3].string
 
-                    log.debug(f"Successfully got: {title}")
+                    log.debug(f"Successfully got the magnet: {title}.")
 
                     animes.append(Anime(release_time, title, size, magnet))
 
@@ -62,8 +59,8 @@ class Acgrip(BasePlugin):
 
                 page += 1
 
-            except:
-                log.error(f"A error occurred while processing the page of {page}.")
+            except Exception as e:
+                log.error(f"A error occurred while processing the page of {page} with error {e!r}.")
                 raise SearchParserError()
 
         return animes

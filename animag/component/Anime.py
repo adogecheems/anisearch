@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from typing import Tuple
 
-from animag import log
+from .. import log, SizeFormatError
 
 # Regular expression patterns
 size_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*(\w+)')
@@ -43,7 +43,8 @@ class Anime:
                 value = self.convert_byte(value, pre_unit, unit)
                 self.size = f"{value}{unit}"
         else:
-            log.error("Failed to format size.")
+            log.error(f"Failed to format size of the anime: {self.title}.")
+            raise SizeFormatError()
 
     @staticmethod
     def convert_byte(value: float, from_unit: str, to_unit: str) -> float | None:
@@ -103,8 +104,8 @@ class Anime:
 
         try:
             return (
-                    magnet_hash_pattern.search(self.magnet).group(1).lower() ==
-                    magnet_hash_pattern.search(value.magnet).group(1).lower()
+                    self._get_hash(self.magnet).lower() ==
+                    self._get_hash(value.magnet).lower()
             )
         except AttributeError:
             log.error("Magnet hash extraction failed.")
@@ -130,10 +131,10 @@ class Anime:
             str: The string representation.
         """
         try:
-            hash_value = magnet_hash_pattern.search(self.magnet).group(1).lower()
+            hash_value = self._get_hash(self.magnet)
         except AttributeError:
-            log.error("Magnet hash extraction failed.")
             hash_value = "unknown"
+
         return f"Anime '{self.title}' with hash {hash_value}"
 
     def __repr__(self) -> str:
@@ -144,3 +145,12 @@ class Anime:
             str: The string representation.
         """
         return f"Anime('{self.time}', '{self.title}', '{self.size}', '{self.magnet}')"
+
+    def _get_hash(self, magnet: str) -> str:
+        """
+        Return the hash of the magnet link.
+
+        Returns:
+            str: The hash value.
+        """
+        return magnet_hash_pattern.search(self.magnet).group(1).lower()

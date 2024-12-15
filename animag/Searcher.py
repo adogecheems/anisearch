@@ -1,14 +1,16 @@
+import copy
 import csv
 import time
 from typing import List, Optional
 
-from . import Anime, SearchRequestError, SearchParserError
-from . import log, plugins
+from . import plugins
+from . import *
 
 
 class Searcher:
     def __init__(self, plugin_name: str = 'dmhy',
-                 parser: Optional[str] = None, verify: Optional[bool] = None, timefmt: Optional[str] = None):
+                 parser: Optional[str] = None, verify: Optional[bool] = None, timefmt: Optional[str] = None,
+                 no_search_errors: bool = False):
         """
         Initialize Searcher object.
 
@@ -18,8 +20,11 @@ class Searcher:
         - verify: Whether to verify
         - timefmt: Time format
         """
+        if no_search_errors:
+            log.warning("Search errors will not be raised.")
+            self.search = no_errors(self.search)
+
         self.reset()
-        self._timefmt = None
         self.plugin = self._load_plugin(plugin_name, parser, verify, timefmt)
         log.debug("New searcher object created.")
 
@@ -49,7 +54,7 @@ class Searcher:
 
     def reset(self) -> None:
         """Reset the search object."""
-        self.animes: List[Anime] = []
+        self.animes: List[Anime] | None = None
         self.anime: Anime | None = None
         self.if_selected: bool = False
 
@@ -80,12 +85,13 @@ class Searcher:
 
         try:
             self.animes = self.plugin.search(**kwargs)
-        except (SearchRequestError, SearchParserError):
-            log.info(f"Failed to search with the plugin: {self.plugin.name}.")
-            return None
-        else:
-            log.info(f"This search is completed: {keyword}")
-            return self.animes
+        except Exception as e:
+            log.info(f"Failed to search with the plugin: {self.plugin.name} with error: {e!r}.")
+            self.animes = None
+            raise
+
+        log.info(f"This search is completed: {keyword}.")
+        return self.animes
 
     def select(self, index: int) -> None:
         """
@@ -112,6 +118,23 @@ class Searcher:
 
         self.anime.size_format(unit)
 
+    def size_format_all(self, unit: str = 'MB') -> None:
+        """
+        Convert the size of all anime in the search results to the specified unit.
+
+        Args:
+        - unit: Target size unit, default is 'MB'
+        """
+        try:
+            animes = copy.deepcopy(self.animes)
+            for anime in animes:
+                anime.size_format(unit)
+        except:
+            raise
+        else:
+            self.animes = animes
+
+
     def save_csv(self, filename: str) -> None:
         """
         Save the selected anime details to a CSV file.
@@ -134,9 +157,9 @@ class Searcher:
                         "magnet": anime.magnet
                     })
 
-        except:
-            log.error(f"Failed to save CSV.")
-            raise
+        except Exception as e:
+            log.error(f"Failed to save CSV file: {filename} with error: {e}.")
+            raise SaveCSVError()
 
 
 if __name__ == "__main__":

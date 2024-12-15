@@ -15,7 +15,7 @@ def setup_logger(name: str = "global", level: int = logging.DEBUG) -> logging.Lo
             file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
             logger.addHandler(file_handler)
         except Exception as e:
-            print(f"Failed to set up file handler: {e}")
+            print(f"Failed to set up file handler: {e!r}.")
 
         stream_handler = logging.StreamHandler()
         stream_handler.setLevel(logging.INFO)
@@ -26,7 +26,7 @@ def setup_logger(name: str = "global", level: int = logging.DEBUG) -> logging.Lo
 
 log = setup_logger()
 
-from .component.errors import SearchParserError, SearchRequestError
+from .component.errors import *
 from .component.webget import get_html
 from .component.Anime import Anime
 from .Searcher import Searcher

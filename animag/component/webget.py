@@ -3,7 +3,7 @@ import os
 import requests
 from requests import RequestException
 
-from .. import log, SearchRequestError
+from .. import *
 
 RETRYING_NUM = 3
 
@@ -31,16 +31,17 @@ def get_html(url, proxies=None, system_proxy=False, verify=True):
             response = requests.get(url, headers=headers, proxies=proxies, verify=verify)
             break
 
-        except RequestException as e:
+        except RequestException:
             counter += 1
             log.exception(f"A request exception occurred, retrying: {counter}.")
 
             if counter >= RETRYING_NUM:
                 log.error(f"Failed to get the response by the url: {url}.")
-                raise SearchRequestError() from e
+                raise SearchRequestError()
 
-    if response.status_code == 200 and response.headers['Content-Type'] == "text/html":
+    if response.status_code == 200 and response.headers['Content-Type'].startswith("text/html"):
         return response.content
     else:
-        log.error(f"Got a unknown response by the url: {url}.")
+        log.error(f"Got an unknown response by the url: {url}.")
         raise SearchRequestError()
+

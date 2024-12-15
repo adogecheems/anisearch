@@ -46,21 +46,18 @@ def main() -> None:
     args = parser.parse_args()
     search_params: Dict[str, Any] = {'keyword': args.search, 'collected': args.collected}
 
-    try:
-        searcher = Searcher(plugin_name=args.plugin)
-        searcher.search(**search_params)
+    searcher = Searcher(plugin_name=args.plugin, no_search_errors=True)
+    searcher.search(**search_params)
 
-        if searcher.animes:
-            print_results(searcher)
-            selection = get_user_selection(len(searcher.animes))
+    if searcher.animes:
+        print_results(searcher)
+        selection = get_user_selection(len(searcher.animes))
 
-            if selection > 0:
-                searcher.select(selection - 1)
-                console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
-                console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
-            else:
-                console.print("[bold yellow]已退出选择[/bold yellow]")
+        if selection > 0:
+            searcher.select(selection - 1)
+            console.print(f"[bold green]已选择 {searcher.anime.title}[/bold green]")
+            console.print(f"[bold green]其磁链为: [/bold green][bold yellow]{searcher.anime.magnet}[/bold yellow]")
         else:
-            console.print("[bold yellow]搜索结果为空[/bold yellow]")
-    except Exception as e:
-        f"[bold red]搜索出错: {e}[/bold red]"
+            console.print("[bold yellow]已退出选择[/bold yellow]")
+    else:
+        console.print("[bold yellow]搜索结果为空[/bold yellow]")
