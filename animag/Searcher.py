@@ -76,7 +76,8 @@ class Searcher:
         self.timefmt = timefmt
 
         if self.animes is not None:
-            pass
+            for anime in self.animes:
+                anime.set_timefmt(timefmt)
 
     def search(self, keyword: str,
                collected: Optional[bool] = None,

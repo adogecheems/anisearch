@@ -1,6 +1,6 @@
 import re
 from dataclasses import dataclass
-from datetime import time
+import time
 from functools import lru_cache
 from typing import Tuple, Optional
 
@@ -60,9 +60,13 @@ class Anime:
 
         Args:
             from_timefmt (str): The original time format.
-            to_timefmt (str): The target time format.
+            to_timefmt (str): The target time format
 
+        Returns:
+            str: The converted time string.
 
+        Raises:
+            TimeFormatError: When time formatting fails.
         """
         try:
             return time.strftime(to_timefmt, time.strptime(self.time, from_timefmt))
