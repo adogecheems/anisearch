@@ -43,7 +43,7 @@ class Nyaa(BasePlugin):
                     tds = tr.find_all("td")
 
                     release_time = tds[4].string
-                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y-%m-%d %H:%M'))
+                    release_time = time.strftime(self.timefmt, time.strptime(release_time, '%Y-%m-%d %H:%M'))
 
                     title = tds[1].a.get("title")
                     magnet = tds[2].find_all("a")[1].get("href")

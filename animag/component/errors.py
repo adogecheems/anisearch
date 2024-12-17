@@ -30,6 +30,10 @@ class PluginImportError(SearchError):
     pass
 
 
+class TimeFormatError(SearchError):
+    pass
+
+
 def no_errors(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):

@@ -61,7 +61,7 @@ class Tokyotosho(BasePlugin):
                     if not bottom:
                         continue
                     size, release_time = extract_info(bottom.text)
-                    release_time = time.strftime(self._timefmt, release_time) if release_time else None
+                    release_time = time.strftime(self.timefmt, release_time) if release_time else None
 
                     log.debug(f"Successfully got: {title}")
 

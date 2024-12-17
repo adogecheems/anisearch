@@ -27,7 +27,7 @@ class Searcher:
             ValueError: If time format is invalid
             PluginImportError: If plugin is not found
         """
-        self._timefmt: Optional[str] = None
+        self.timefmt: Optional[str] = None
         self.animes: List[Anime] | None = None
         self.anime: Anime | None = None
 
@@ -50,15 +50,15 @@ class Searcher:
         if verify is not None:
             kwargs['verify'] = verify
         if timefmt is not None:
-            self.set_timefmt(timefmt)
-            kwargs['timefmt'] = self._timefmt
+            self.settimefmt(timefmt)
+            kwargs['timefmt'] = self.timefmt
 
         plugin = plugins.get_plugin(plugin_name)(**kwargs)
 
         log.info(f"Successfully loaded plugin: {plugin_name}")
         return plugin
 
-    def set_timefmt(self, timefmt: str) -> None:
+    def settimefmt(self, timefmt: str) -> None:
         """
         Set and validate the time format.
 
@@ -66,14 +66,17 @@ class Searcher:
             timefmt: Time format string
 
         Raises:
-            ValueError: If time format is invalid
+            TimeFormatError: If time format is invalid
         """
         try:
             time.strftime(timefmt, time.localtime())
         except Exception as e:
-            raise ValueError(f"Invalid time format {timefmt} : {e!r}")
+            raise TimeFormatError(f"Invalid time format {timefmt} : {e!r}")
 
-        self._timefmt = timefmt
+        self.timefmt = timefmt
+
+        if self.animes is not None:
+            pass
 
     def search(self, keyword: str,
                collected: Optional[bool] = None,

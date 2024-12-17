@@ -1,9 +1,10 @@
 import re
 from dataclasses import dataclass
+from datetime import time
 from functools import lru_cache
 from typing import Tuple, Optional
 
-from .. import log, SizeFormatError
+from .. import log, SizeFormatError, TimeFormatError
 
 size_pattern = re.compile(r'^(\d+(?:\.\d+)?)\s*(\w+)$')
 magnet_hash_pattern = re.compile(r'btih:([a-fA-F0-9]+)')
@@ -52,6 +53,22 @@ class Anime:
             raise SizeFormatError(f"Failed to format size of the anime: {self.title}")
 
         self.size = f"{value}{unit}"
+
+    def set_timefmt(self, from_timefmt: str, to_timefmt: str):
+        """
+        Convert the time string from one format to another.
+
+        Args:
+            from_timefmt (str): The original time format.
+            to_timefmt (str): The target time format.
+
+
+        """
+        try:
+            return time.strftime(to_timefmt, time.strptime(self.time, from_timefmt))
+        except Exception as e:
+            raise TimeFormatError(f"Invalid time format: {e.args[0]}")
+
 
     @staticmethod
     @lru_cache(maxsize=128)

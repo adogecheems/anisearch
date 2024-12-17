@@ -62,7 +62,7 @@ class _Miobt(BasePlugin):
                 for tr in tbody.find_all("tr"):
                     tds = tr.find_all("td")
                     release_time = tds[0].get_text(strip=True)
-                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d'))
+                    release_time = time.strftime(self.timefmt, time.strptime(release_time, '%Y/%m/%d'))
 
                     title = tds[2].a.get_text(strip=True)
                     link = DOMAIN + tds[2].a["href"]

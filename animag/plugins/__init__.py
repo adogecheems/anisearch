@@ -24,7 +24,7 @@ class BasePlugin(metaclass=PluginMeta):
                  timefmt: Optional[str] = None):
         self._parser = parser
         self._verify = verify
-        self._timefmt = timefmt
+        self.timefmt = timefmt
 
     @abstractmethod
     def search(self, keyword: str,

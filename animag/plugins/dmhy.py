@@ -41,7 +41,7 @@ class Dmhy(BasePlugin):
                 for tr in tbody.find_all("tr"):
                     tds = tr.find_all("td")
                     release_time = tds[0].span.string
-                    release_time = time.strftime(self._timefmt, time.strptime(release_time, '%Y/%m/%d %H:%M'))
+                    release_time = time.strftime(self.timefmt, time.strptime(release_time, '%Y/%m/%d %H:%M'))
 
                     title = tds[2].find_all("a")[-1].get_text(strip=True)
                     magnet = tds[3].find(class_="download-arrow")["href"]
